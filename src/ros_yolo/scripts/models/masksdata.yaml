@@ -1,0 +1,10 @@
+
+train: D:\Project\yolov5-6.0\masksdata\images\train  # train images (relative to 'path') 128 images
+val: D:\Project\yolov5-6.0\masksdata\images\train  # val images (relative to 'path') 128 images
+
+
+# Classes
+nc: 2  # number of classes
+names: ['no_masks', 'masks']  # class names
+
+
