@@ -20,7 +20,8 @@ class image_converter:
     # self.image_pub = rospy.Publisher("image_topic_2",Image)
 
     self.bridge = CvBridge()
-    self.image_sub = rospy.Subscriber("camera",Image,self.callback)
+    self.image_sub = rospy.Subscriber("/detections_objects_topic",Image,self.callback)
+    # self.image_sub = rospy.Subscriber("camera",Image,self.callback)
 
   def callback(self,data):
     try:

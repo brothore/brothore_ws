@@ -21,6 +21,7 @@ class car_param {
       this.R_wheel = null;
       this.W_car = null;
       this.L_car = null;
+      this.Reset_car = null;
     }
     else {
       if (initObj.hasOwnProperty('R_wheel')) {
@@ -41,6 +42,12 @@ class car_param {
       else {
         this.L_car = 0.0;
       }
+      if (initObj.hasOwnProperty('Reset_car')) {
+        this.Reset_car = initObj.Reset_car
+      }
+      else {
+        this.Reset_car = 0.0;
+      }
     }
   }
 
@@ -52,6 +59,8 @@ class car_param {
     bufferOffset = _serializer.float32(obj.W_car, buffer, bufferOffset);
     // Serialize message field [L_car]
     bufferOffset = _serializer.float32(obj.L_car, buffer, bufferOffset);
+    // Serialize message field [Reset_car]
+    bufferOffset = _serializer.float32(obj.Reset_car, buffer, bufferOffset);
     return bufferOffset;
   }
 
@@ -65,11 +74,13 @@ class car_param {
     data.W_car = _deserializer.float32(buffer, bufferOffset);
     // Deserialize message field [L_car]
     data.L_car = _deserializer.float32(buffer, bufferOffset);
+    // Deserialize message field [Reset_car]
+    data.Reset_car = _deserializer.float32(buffer, bufferOffset);
     return data;
   }
 
   static getMessageSize(object) {
-    return 12;
+    return 16;
   }
 
   static datatype() {
@@ -79,7 +90,7 @@ class car_param {
 
   static md5sum() {
     //Returns md5sum for a message object
-    return '762b33a7ff469985517664c4a1eb5a3a';
+    return '71265fe5412a6ab64209f231f18d49fc';
   }
 
   static messageDefinition() {
@@ -88,6 +99,7 @@ class car_param {
     float32 R_wheel
     float32 W_car
     float32 L_car
+    float32 Reset_car
     
     `;
   }
@@ -117,6 +129,13 @@ class car_param {
     }
     else {
       resolved.L_car = 0.0
+    }
+
+    if (msg.Reset_car !== undefined) {
+      resolved.Reset_car = msg.Reset_car;
+    }
+    else {
+      resolved.Reset_car = 0.0
     }
 
     return resolved;

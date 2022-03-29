@@ -26,12 +26,14 @@ struct car_param_
   car_param_()
     : R_wheel(0.0)
     , W_car(0.0)
-    , L_car(0.0)  {
+    , L_car(0.0)
+    , Reset_car(0.0)  {
     }
   car_param_(const ContainerAllocator& _alloc)
     : R_wheel(0.0)
     , W_car(0.0)
-    , L_car(0.0)  {
+    , L_car(0.0)
+    , Reset_car(0.0)  {
   (void)_alloc;
     }
 
@@ -45,6 +47,9 @@ struct car_param_
 
    typedef float _L_car_type;
   _L_car_type L_car;
+
+   typedef float _Reset_car_type;
+  _Reset_car_type Reset_car;
 
 
 
@@ -77,7 +82,8 @@ bool operator==(const ::lino_msgs::car_param_<ContainerAllocator1> & lhs, const 
 {
   return lhs.R_wheel == rhs.R_wheel &&
     lhs.W_car == rhs.W_car &&
-    lhs.L_car == rhs.L_car;
+    lhs.L_car == rhs.L_car &&
+    lhs.Reset_car == rhs.Reset_car;
 }
 
 template<typename ContainerAllocator1, typename ContainerAllocator2>
@@ -134,12 +140,12 @@ struct MD5Sum< ::lino_msgs::car_param_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "762b33a7ff469985517664c4a1eb5a3a";
+    return "71265fe5412a6ab64209f231f18d49fc";
   }
 
   static const char* value(const ::lino_msgs::car_param_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x762b33a7ff469985ULL;
-  static const uint64_t static_value2 = 0x517664c4a1eb5a3aULL;
+  static const uint64_t static_value1 = 0x71265fe5412a6ab6ULL;
+  static const uint64_t static_value2 = 0x4209f231f18d49fcULL;
 };
 
 template<class ContainerAllocator>
@@ -161,6 +167,7 @@ struct Definition< ::lino_msgs::car_param_<ContainerAllocator> >
     return "float32 R_wheel\n"
 "float32 W_car\n"
 "float32 L_car\n"
+"float32 Reset_car\n"
 ;
   }
 
@@ -182,6 +189,7 @@ namespace serialization
       stream.next(m.R_wheel);
       stream.next(m.W_car);
       stream.next(m.L_car);
+      stream.next(m.Reset_car);
     }
 
     ROS_DECLARE_ALLINONE_SERIALIZER
@@ -206,6 +214,8 @@ struct Printer< ::lino_msgs::car_param_<ContainerAllocator> >
     Printer<float>::stream(s, indent + "  ", v.W_car);
     s << indent << "L_car: ";
     Printer<float>::stream(s, indent + "  ", v.L_car);
+    s << indent << "Reset_car: ";
+    Printer<float>::stream(s, indent + "  ", v.Reset_car);
   }
 };
 

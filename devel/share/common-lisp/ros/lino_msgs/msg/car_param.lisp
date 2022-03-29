@@ -21,6 +21,11 @@
     :reader L_car
     :initarg :L_car
     :type cl:float
+    :initform 0.0)
+   (Reset_car
+    :reader Reset_car
+    :initarg :Reset_car
+    :type cl:float
     :initform 0.0))
 )
 
@@ -46,6 +51,11 @@
 (cl:defmethod L_car-val ((m <car_param>))
   (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader lino_msgs-msg:L_car-val is deprecated.  Use lino_msgs-msg:L_car instead.")
   (L_car m))
+
+(cl:ensure-generic-function 'Reset_car-val :lambda-list '(m))
+(cl:defmethod Reset_car-val ((m <car_param>))
+  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader lino_msgs-msg:Reset_car-val is deprecated.  Use lino_msgs-msg:Reset_car instead.")
+  (Reset_car m))
 (cl:defmethod roslisp-msg-protocol:serialize ((msg <car_param>) ostream)
   "Serializes a message object of type '<car_param>"
   (cl:let ((bits (roslisp-utils:encode-single-float-bits (cl:slot-value msg 'R_wheel))))
@@ -59,6 +69,11 @@
     (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream))
   (cl:let ((bits (roslisp-utils:encode-single-float-bits (cl:slot-value msg 'L_car))))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream))
+  (cl:let ((bits (roslisp-utils:encode-single-float-bits (cl:slot-value msg 'Reset_car))))
     (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
@@ -84,6 +99,12 @@
       (cl:setf (cl:ldb (cl:byte 8 16) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 24) bits) (cl:read-byte istream))
     (cl:setf (cl:slot-value msg 'L_car) (roslisp-utils:decode-single-float-bits bits)))
+    (cl:let ((bits 0))
+      (cl:setf (cl:ldb (cl:byte 8 0) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 16) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 24) bits) (cl:read-byte istream))
+    (cl:setf (cl:slot-value msg 'Reset_car) (roslisp-utils:decode-single-float-bits bits)))
   msg
 )
 (cl:defmethod roslisp-msg-protocol:ros-datatype ((msg (cl:eql '<car_param>)))
@@ -94,18 +115,19 @@
   "lino_msgs/car_param")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<car_param>)))
   "Returns md5sum for a message object of type '<car_param>"
-  "762b33a7ff469985517664c4a1eb5a3a")
+  "71265fe5412a6ab64209f231f18d49fc")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'car_param)))
   "Returns md5sum for a message object of type 'car_param"
-  "762b33a7ff469985517664c4a1eb5a3a")
+  "71265fe5412a6ab64209f231f18d49fc")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<car_param>)))
   "Returns full string definition for message of type '<car_param>"
-  (cl:format cl:nil "float32 R_wheel~%float32 W_car~%float32 L_car~%~%~%"))
+  (cl:format cl:nil "float32 R_wheel~%float32 W_car~%float32 L_car~%float32 Reset_car~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'car_param)))
   "Returns full string definition for message of type 'car_param"
-  (cl:format cl:nil "float32 R_wheel~%float32 W_car~%float32 L_car~%~%~%"))
+  (cl:format cl:nil "float32 R_wheel~%float32 W_car~%float32 L_car~%float32 Reset_car~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <car_param>))
   (cl:+ 0
+     4
      4
      4
      4
@@ -116,4 +138,5 @@
     (cl:cons ':R_wheel (R_wheel msg))
     (cl:cons ':W_car (W_car msg))
     (cl:cons ':L_car (L_car msg))
+    (cl:cons ':Reset_car (Reset_car msg))
 ))

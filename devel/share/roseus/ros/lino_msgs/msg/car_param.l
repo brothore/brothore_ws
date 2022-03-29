@@ -14,7 +14,7 @@
 
 (defclass lino_msgs::car_param
   :super ros::object
-  :slots (_R_wheel _W_car _L_car ))
+  :slots (_R_wheel _W_car _L_car _Reset_car ))
 
 (defmethod lino_msgs::car_param
   (:init
@@ -22,11 +22,13 @@
     ((:R_wheel __R_wheel) 0.0)
     ((:W_car __W_car) 0.0)
     ((:L_car __L_car) 0.0)
+    ((:Reset_car __Reset_car) 0.0)
     )
    (send-super :init)
    (setq _R_wheel (float __R_wheel))
    (setq _W_car (float __W_car))
    (setq _L_car (float __L_car))
+   (setq _Reset_car (float __Reset_car))
    self)
   (:R_wheel
    (&optional __R_wheel)
@@ -37,6 +39,9 @@
   (:L_car
    (&optional __L_car)
    (if __L_car (setq _L_car __L_car)) _L_car)
+  (:Reset_car
+   (&optional __Reset_car)
+   (if __Reset_car (setq _Reset_car __Reset_car)) _Reset_car)
   (:serialization-length
    ()
    (+
@@ -45,6 +50,8 @@
     ;; float32 _W_car
     4
     ;; float32 _L_car
+    4
+    ;; float32 _Reset_car
     4
     ))
   (:serialize
@@ -57,6 +64,8 @@
        (sys::poke _W_car (send s :buffer) (send s :count) :float) (incf (stream-count s) 4)
      ;; float32 _L_car
        (sys::poke _L_car (send s :buffer) (send s :count) :float) (incf (stream-count s) 4)
+     ;; float32 _Reset_car
+       (sys::poke _Reset_car (send s :buffer) (send s :count) :float) (incf (stream-count s) 4)
      ;;
      (if (null strm) (get-output-stream-string s))))
   (:deserialize
@@ -67,21 +76,24 @@
      (setq _W_car (sys::peek buf ptr- :float)) (incf ptr- 4)
    ;; float32 _L_car
      (setq _L_car (sys::peek buf ptr- :float)) (incf ptr- 4)
+   ;; float32 _Reset_car
+     (setq _Reset_car (sys::peek buf ptr- :float)) (incf ptr- 4)
    ;;
    self)
   )
 
-(setf (get lino_msgs::car_param :md5sum-) "762b33a7ff469985517664c4a1eb5a3a")
+(setf (get lino_msgs::car_param :md5sum-) "71265fe5412a6ab64209f231f18d49fc")
 (setf (get lino_msgs::car_param :datatype-) "lino_msgs/car_param")
 (setf (get lino_msgs::car_param :definition-)
       "float32 R_wheel
 float32 W_car
 float32 L_car
+float32 Reset_car
 
 ")
 
 
 
-(provide :lino_msgs/car_param "762b33a7ff469985517664c4a1eb5a3a")
+(provide :lino_msgs/car_param "71265fe5412a6ab64209f231f18d49fc")
 
 

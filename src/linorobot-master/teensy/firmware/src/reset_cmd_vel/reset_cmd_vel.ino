@@ -1,4 +1,4 @@
-//走制定距离 1m,ctrl+k ctrl+1
+//猫碌掳氓藛露氓庐拧猫路聺莽娄?1m,ctrl+k ctrl+1
 #include <ros.h>
 #include <std_msgs/String.h>
 #include <std_msgs/Empty.h>
@@ -20,24 +20,24 @@
 #define IMU_PUBLISH_RATE 20 //hz
 #define COMMAND_RATE 20     //hz
 #define DEBUG_RATE 5
-#define MotorL1countA 21 //编码器A
-#define MotorL1countB 45 //编码器B
+#define MotorL1countA 21 //莽录鈥撁犅伱モ劉篓A
+#define MotorL1countB 45 //莽录鈥撁犅伱モ劉篓B
 
-#define MotorR1countA 20 //编码器A
-#define MotorR1countB 44 //编码器B
+#define MotorR1countA 20 //莽录鈥撁犅伱モ劉篓A
+#define MotorR1countB 44 //莽录鈥撁犅伱モ劉篓B
 
-#define MotorL2countA 18 //编码器A
-#define MotorL2countB 43 //编码器B
+#define MotorL2countA 18 //莽录鈥撁犅伱モ劉篓A
+#define MotorL2countB 43 //莽录鈥撁犅伱モ劉篓B
 
-#define MotorR2countA 2 //编码器A
-#define MotorR2countB 34 //编码器B
+#define MotorR2countA 2 //莽录鈥撁犅伱モ劉篓A
+#define MotorR2countB 34 //莽录鈥撁犅伱モ劉篓B
 
-#define MotorL3countA 19 //编码器A
-#define MotorL3countB 42 //编码器B
+#define MotorL3countA 19 //莽录鈥撁犅伱モ劉篓A
+#define MotorL3countB 42 //莽录鈥撁犅伱モ劉篓B
 
 
-#define MotorR3countA 3 //编码器A
-#define MotorR3countB 33 //编码器B
+#define MotorR3countA 3 //莽录鈥撁犅伱モ劉篓A
+#define MotorR3countB 33 //莽录鈥撁犅伱モ劉篓B
 // #define K_P 0.6 // P constant
 // #define K_I 0.3 // I constant
 // #define K_D 0.5 // D constant
@@ -57,6 +57,7 @@ double vel_th;
 float Acc_lr, Acc_fb, Acc_g;
 float Angle_tg, Angle_tt, Angle_fx;
 float Gyro_tg, Gyro_tt, Gyro_fx;
+void(* resetFunc) (void) = 0;
 //you
 const int R3S = 12;
 const int R3A = 26;
@@ -88,29 +89,18 @@ int H_L2_B = 0;
 int H_R2_B = 0;
 int H_L3_B = 0;
 int H_R3_B = 0;
-volatile float motorL1 = 0; //中断变量，左轮子脉冲计数
-volatile float motorR1 = 0; //中断变量，右轮子脉冲计数
-volatile float motorL2 = 0; //中断变量，左轮子脉冲计数
-volatile float motorR2 = 0; //中断变量，右轮子脉冲计数
-volatile float motorL3 = 0; //中断变量，左轮子脉冲计数
-volatile float motorR3 = 0; //中断变量，右轮子脉冲计数
-
-volatile float S_motorL1 = 0; //中断变量，左轮子脉冲计数
-volatile float S_motorR1 = 0; //中断变量，右轮子脉冲计数
-volatile float S_motorL2 = 0; //中断变量，左轮子脉冲计数
-volatile float S_motorR2 = 0; //中断变量，右轮子脉冲计数
-volatile float S_motorL3 = 0; //中断变量，左轮子脉冲计数
-volatile float S_motorR3 = 0; //中断变量，右轮子脉冲计数
-
+volatile float motorL1 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ仿γ铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?volatile float motorR1 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ徛趁铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?volatile float motorL2 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ仿γ铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?volatile float motorR2 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ徛趁铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?volatile float motorL3 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ仿γ铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?volatile float motorR3 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ徛趁铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?
+volatile float S_motorL1 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ仿γ铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?volatile float S_motorR1 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ徛趁铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?volatile float S_motorL2 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ仿γ铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?volatile float S_motorR2 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ徛趁铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?volatile float S_motorL3 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ仿γ铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?volatile float S_motorR3 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ徛趁铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?
 
 float S_L1, S_R1, S_L2, S_R2, S_L3, S_R3;
+float C_L1, C_R1, C_L2, C_R2, C_L3, C_R3;
 
-float v1 = 0;               //单位m/s
-float v2 = 0;               //单位m/s
-float v3 = 0;               //单位m/s
-float v4 = 0;               //单位m/s
-float v5 = 0;               //单位m/s
-float v6 = 0;               //单位m/s
+float v1 = 0;               //氓聧鈥⒚ぢ铰峬/s
+float v2 = 0;               //氓聧鈥⒚ぢ铰峬/s
+float v3 = 0;               //氓聧鈥⒚ぢ铰峬/s
+float v4 = 0;               //氓聧鈥⒚ぢ铰峬/s
+float v5 = 0;               //氓聧鈥⒚ぢ铰峬/s
+float v6 = 0;               //氓聧鈥⒚ぢ铰峬/s
 // Servo myservo;
 float g_req_linear_vel_x = 0;
 float g_req_linear_vel_y = 0;
@@ -134,7 +124,7 @@ void PIDCallback(const lino_msgs::PID &pid);
 void CarCallback(const lino_msgs::car_param &car_p);
 int vel_flag = 0;
 
-float R_wheel = 0.0745;
+float R_wheel = 0.0911;
 float W_car = 0.22;
 float L_car = 0.28;
 unsigned long nowtime = 0;
@@ -159,8 +149,7 @@ ros::Subscriber<geometry_msgs::Twist> sub("/cmd_vel", messageCb);
 ros::Subscriber<lino_msgs::PID> pid_sub("pid", PIDCallback);
 ros::Subscriber<lino_msgs::car_param> car_sub("car_param",CarCallback);
 
-//移动信息回调
-void messageCb(const geometry_msgs::Twist &cmd_vel)
+//莽搂禄氓艩篓盲驴隆忙聛炉氓鈥号久捌?void messageCb(const geometry_msgs::Twist &cmd_vel)
 {
   lasttim = millis();
   Serial.println("recevied");
@@ -168,8 +157,7 @@ void messageCb(const geometry_msgs::Twist &cmd_vel)
   vel_th = cmd_vel.angular.z;
   g_prev_command_time = millis();
 }
-//行走函数
-void moveBase()
+//猫隆艗猫碌掳氓鈥÷矫︹€⒙?void moveBase()
 {
   // left_vel = vel_x - (vel_th*W_car);
   // right_vel = vel_x + (vel_th * W_car);
@@ -181,7 +169,15 @@ void moveBase()
   // Serial.println(right_vel);
 float left_speed = left_vel;
 float right_speed = right_vel;
-if (S_L1>1.0&&S_L2>1.0&&S_L3>1.0&&S_R1>1.0&&S_R2>1.0&&S_R3>1.0)
+// if (S_L1>1&&S_L2>1&&S_L3>1&&S_R1>1&&S_R2>1&&S_R3>1)
+// if (C_L1>=5&&C_L2>=5&&C_L3>=5&&C_R1>=5&&C_R2>=5&&C_R3>=5)
+float C_avr = (C_L1+C_L2+C_L3+C_R1+C_R2+C_R3)/6;
+float S_avr = (S_L1+S_L2+S_L3+S_R1+S_R2+S_R3)/6;
+
+// if (C_avr>5||S_avr<-5)
+
+// if (S_avr>=(1.399422448))
+if (S_avr>=(1))
 {
   /* code */
   nh.loginfo("STOPED!!!");
@@ -215,15 +211,14 @@ if (S_L1>1.0&&S_L2>1.0&&S_L3>1.0&&S_R1>1.0&&S_R2>1.0&&S_R3>1.0)
   // Run_Moto_F(left_speed,right_speed,3,3);
   str_wheel.L_SPEED = left_speed;
   str_wheel.R_SPEED = right_speed;
-  str_wheel.L1_PID = l1_pid;
-  str_wheel.R1_PID = r1_pid;
-  str_wheel.L2_PID = l2_pid;
-  str_wheel.R2_PID = r2_pid;
-  str_wheel.L3_PID = l3_pid;
-  str_wheel.R3_PID = r3_pid;
+  // str_wheel.L1_PID = l1_pid;
+  // str_wheel.R1_PID = r1_pid;
+  // str_wheel.L2_PID = l2_pid;
+  // str_wheel.R2_PID = r2_pid;
+  // str_wheel.L3_PID = l3_pid;
+  // str_wheel.R3_PID = r3_pid;
 }
-//停止函数
-void stopBase()
+//氓聛艙忙颅垄氓鈥÷矫︹€⒙?void stopBase()
 {
   vel_x = 0;
   vel_th = 0;
@@ -233,9 +228,8 @@ void stopBase()
 }
 
 /**
-     函数作用：读取左右电机的速度
-     返回值：  无
-     
+     氓鈥÷矫︹€⒙懊ぢ脚撁р€澛寂∶幻ヂ忊€撁ヂ仿γヂ徛趁р€澛得ε撀好♀€灻┾偓鸥氓潞娄
+     猫驴鈥澝モ€号久モ偓录茂录拧  忙鈥?     
     r3------l3
     l2------l1
     r2------r1
@@ -244,42 +238,40 @@ void stopBase()
 void Read_Moto_V(int ifDebug)
 {
 
-  //这是读取电机速度的函数
- 
+  //猫驴鈩⒚λ溌幻ヂ忊€撁р€澛得ε撀好┾偓鸥氓潞娄莽拧鈥灻モ€÷矫︹€? 
   if(vel_flag == 0)
   {
   nowtime = millis() + 50; 
   vel_flag = 1;
-  } //读50毫秒
-  attachInterrupt(digitalPinToInterrupt(MotorL1countA), Read_Moto_L1, RISING); //左轮脉冲开中断计数
-  attachInterrupt(digitalPinToInterrupt(MotorR1countA), Read_Moto_R1, RISING); //右轮脉冲开中断计数
-  attachInterrupt(digitalPinToInterrupt(MotorL2countA), Read_Moto_L2, RISING); //左轮脉冲开中断计数
-  attachInterrupt(digitalPinToInterrupt(MotorR2countA), Read_Moto_R2, RISING); //右轮脉冲开中断计数
-  attachInterrupt(digitalPinToInterrupt(MotorL3countA), Read_Moto_L3, RISING); //左轮脉冲开中断计数
-  attachInterrupt(digitalPinToInterrupt(MotorR3countA), Read_Moto_R3, RISING); //右轮脉冲开中断计数
-  if (millis() >= nowtime){                                          //达到50毫秒关闭中断
-    detachInterrupt(digitalPinToInterrupt(MotorL1countA)); //左轮脉冲关中断计数
-    detachInterrupt(digitalPinToInterrupt(MotorR1countA)); //右轮脉冲关中断计数
-    detachInterrupt(digitalPinToInterrupt(MotorL2countA)); //左轮脉冲关中断计数
-    detachInterrupt(digitalPinToInterrupt(MotorR2countA)); //右轮脉冲关中断计数
-    detachInterrupt(digitalPinToInterrupt(MotorL3countA)); //左轮脉冲关中断计数
-    detachInterrupt(digitalPinToInterrupt(MotorR3countA)); //右轮脉冲关中断计数
+  } //猫炉?0忙炉芦莽搂鈥?  attachInterrupt(digitalPinToInterrupt(MotorL1countA), Read_Moto_L1, RISING); //氓路娄猫陆庐猫鈥炩€懊モ€犅裁ヂ尖偓盲赂颅忙鈥撀∶︹€⒙?  attachInterrupt(digitalPinToInterrupt(MotorR1countA), Read_Moto_R1, RISING); //氓聫鲁猫陆庐猫鈥炩€懊モ€犅裁ヂ尖偓盲赂颅忙鈥撀∶︹€⒙?  attachInterrupt(digitalPinToInterrupt(MotorL2countA), Read_Moto_L2, RISING); //氓路娄猫陆庐猫鈥炩€懊モ€犅裁ヂ尖偓盲赂颅忙鈥撀∶︹€⒙?  attachInterrupt(digitalPinToInterrupt(MotorR2countA), Read_Moto_R2, RISING); //氓聫鲁猫陆庐猫鈥炩€懊モ€犅裁ヂ尖偓盲赂颅忙鈥撀∶︹€⒙?  attachInterrupt(digitalPinToInterrupt(MotorL3countA), Read_Moto_L3, RISING); //氓路娄猫陆庐猫鈥炩€懊モ€犅裁ヂ尖偓盲赂颅忙鈥撀∶︹€⒙?  attachInterrupt(digitalPinToInterrupt(MotorR3countA), Read_Moto_R3, RISING); //氓聫鲁猫陆庐猫鈥炩€懊モ€犅裁ヂ尖偓盲赂颅忙鈥撀∶︹€⒙?  if (millis() >= nowtime){                                          //猫戮戮氓藛掳50忙炉芦莽搂鈥櫭モ€β趁┾€斅ぢ嘎︹€撀?    detachInterrupt(digitalPinToInterrupt(MotorL1countA)); //氓路娄猫陆庐猫鈥炩€懊モ€犅裁モ€β趁ぢ嘎︹€撀∶︹€?    
+    detachInterrupt(digitalPinToInterrupt(MotorR1countA)); //氓聫鲁猫陆庐猫鈥炩€懊モ€犅裁モ€β趁ぢ嘎︹€撀∶︹€?    
+    detachInterrupt(digitalPinToInterrupt(MotorL2countA)); //氓路娄猫陆庐猫鈥炩€懊モ€犅裁モ€β趁ぢ嘎︹€撀∶︹€?    
+    detachInterrupt(digitalPinToInterrupt(MotorR2countA)); //氓聫鲁猫陆庐猫鈥炩€懊モ€犅裁モ€β趁ぢ嘎︹€撀∶︹€?    
+    detachInterrupt(digitalPinToInterrupt(MotorL3countA)); //氓路娄猫陆庐猫鈥炩€懊モ€犅裁モ€β趁ぢ嘎︹€撀∶︹€?    
+    detachInterrupt(digitalPinToInterrupt(MotorR3countA)); //氓聫鲁猫陆庐猫鈥炩€懊モ€犅裁モ€β趁ぢ嘎︹€撀∶︹€?    
     float V_L1, V_R1, V_L2, V_R2, V_L3, V_R3;
     V_L1 = V_R1 = V_L2 = V_R2 = V_L3 = V_R3 = 0;
-    //390来自转速比1:30中的30乘以编码器线数13
-    V_L1 = ((motorL1 / 390) * R_wheel  * PI) / 0.05; //单位m/s
-    V_R1 = ((motorR1 / 390) * R_wheel  * PI) / 0.05; //单位m/s
-    V_L2 = ((motorL2 / 390) * R_wheel  * PI) / 0.05; //单位m/s
-    V_R2 = ((motorR2 / 390) * R_wheel  * PI) / 0.05; //单位m/s
-    V_L3 = ((motorL3 / 390) * R_wheel  * PI) / 0.05; //单位m/s
-    V_R3 = ((motorR3 / 390) * R_wheel  * PI) / 0.05; //单位m/s
+    //390忙聺楼猫鈥÷铰┾偓鸥忙炉鈥?:30盲赂颅莽拧鈥?0盲鹿藴盲禄楼莽录鈥撁犅伱モ劉篓莽潞驴忙鈥?3
+    V_L1 = ((motorL1 / 390) * R_wheel  * PI) / 0.05; //氓聧鈥⒚ぢ铰峬/s
+    V_R1 = ((motorR1 / 390) * R_wheel  * PI) / 0.05; //氓聧鈥⒚ぢ铰峬/s
+    V_L2 = ((motorL2 / 390) * R_wheel  * PI) / 0.05; //氓聧鈥⒚ぢ铰峬/s
+    V_R2 = ((motorR2 / 390) * R_wheel  * PI) / 0.05; //氓聧鈥⒚ぢ铰峬/s
+    V_L3 = ((motorL3 / 390) * R_wheel  * PI) / 0.05; //氓聧鈥⒚ぢ铰峬/s
+    V_R3 = ((motorR3 / 390) * R_wheel  * PI) / 0.05; //氓聧鈥⒚ぢ铰峬/s
     
-    S_L1 = ((S_motorL1 / 390) * R_wheel  * PI) ; //单位m
-    S_R1 = ((S_motorR1 / 390) * R_wheel  * PI) ; //单位m
-    S_L2 = ((S_motorL2 / 390) * R_wheel  * PI) ; //单位m
-    S_R2 = ((S_motorR2 / 390) * R_wheel  * PI) ; //单位m
-    S_L3 = ((S_motorL3 / 390) * R_wheel  * PI) ; //单位m
-    S_R3 = ((S_motorR3 / 390) * R_wheel  * PI) ; //单位m
+    C_L1 = ((S_motorL1 / 390) ) ; //氓聧鈥⒚ぢ铰峬
+    C_R1 = ((S_motorR1 / 390) ) ; //氓聧鈥⒚ぢ铰峬
+    C_L2 = ((S_motorL2 / 390) ) ; //氓聧鈥⒚ぢ铰峬
+    C_R2 = ((S_motorR2 / 390) ) ; //氓聧鈥⒚ぢ铰峬
+    C_L3 = ((S_motorL3 / 390) ) ; //氓聧鈥⒚ぢ铰峬
+    C_R3 = ((S_motorR3 / 390) ) ; //氓聧鈥⒚ぢ铰峬
+
+    S_L1 = ((S_motorL1 / 390) * R_wheel  * PI) ; //氓聧鈥⒚ぢ铰峬
+    S_R1 = ((S_motorR1 / 390) * R_wheel  * PI) ; //氓聧鈥⒚ぢ铰峬
+    S_L2 = ((S_motorL2 / 390) * R_wheel  * PI) ; //氓聧鈥⒚ぢ铰峬
+    S_R2 = ((S_motorR2 / 390) * R_wheel  * PI) ; //氓聧鈥⒚ぢ铰峬
+    S_L3 = ((S_motorL3 / 390) * R_wheel  * PI) ; //氓聧鈥⒚ぢ铰峬
+    S_R3 = ((S_motorR3 / 390) * R_wheel  * PI) ; //氓聧鈥⒚ぢ铰峬
     v1 = V_L1;
     v2 = V_R1;
     v3 = V_L2;
@@ -327,6 +319,7 @@ void Read_Moto_V(int ifDebug)
       str_wheel.R1 = S_R1;
       str_wheel.R2 = S_R2;
       str_wheel.R3 = S_R3;
+      str_wheel.L1_PID = ((C_L1+C_L2+C_L3+C_R1+C_R2+C_R3)/6);
     }
     vel_flag = 0;
      motorL1 = 0;
@@ -336,8 +329,7 @@ void Read_Moto_V(int ifDebug)
      motorL3 = 0;
      motorR3 = 0;
   }
-  // 变压器一边为车头
-}
+  // 氓聫藴氓沤鈥姑モ劉篓盲赂鈧韭姑ぢ嘎好铰γヂぢ?}
 
 void PIDCallback(const lino_msgs::PID &pid)
 {
@@ -354,13 +346,53 @@ void CarCallback(const lino_msgs::car_param &car_p){
   R_wheel = car_p.R_wheel;
   W_car = car_p.W_car;
   L_car = car_p.L_car;
+  int resetCar = car_p.Reset_car;
+  if (resetCar >=1)
+  {   
+//     S_L1=0;
+//       S_L2=0;
+//       S_L3=0;
+//       S_R1=0;
+//       S_R2=0;
+//       S_R3=0;
+      
+// detachInterrupt(digitalPinToInterrupt(MotorL1countA)); //氓路娄猫陆庐猫鈥炩€懊モ€犅裁モ€β趁ぢ嘎︹€撀∶︹€?    
+//     detachInterrupt(digitalPinToInterrupt(MotorR1countA)); //氓聫鲁猫陆庐猫鈥炩€懊モ€犅裁モ€β趁ぢ嘎︹€撀∶︹€?    
+//     detachInterrupt(digitalPinToInterrupt(MotorL2countA)); //氓路娄猫陆庐猫鈥炩€懊モ€犅裁モ€β趁ぢ嘎︹€撀∶︹€?    
+//     detachInterrupt(digitalPinToInterrupt(MotorR2countA)); //氓聫鲁猫陆庐猫鈥炩€懊モ€犅裁モ€β趁ぢ嘎︹€撀∶︹€?    
+//     detachInterrupt(digitalPinToInterrupt(MotorL3countA)); //氓路娄猫陆庐猫鈥炩€懊モ€犅裁モ€β趁ぢ嘎︹€撀∶︹€?    
+//     detachInterrupt(digitalPinToInterrupt(MotorR3countA));
+//       C_L1=0;
+//       C_L2=0;
+//       C_L3=0;
+//       C_R1=0;
+//       C_R2=0;
+//       C_R3=0;
+
+//       S_motorL1=0;
+//       S_motorL2=0;
+//       S_motorL3=0;
+//       S_motorR1=0;
+//       S_motorR2=0;
+//       S_motorR3=0;
+
+//       motorL1=0;
+//       motorL2=0;
+//       motorL3=0;
+//       motorR1=0;
+//       motorR2=0;
+//       motorR3=0;
+      resetFunc();
+    /* code */
+  }
+  
 
 }
 
 void Read_Moto_L1()
 {
 
-  H_L1_B = digitalRead(MotorL1countB); //0是倒转 1是正转
+  H_L1_B = digitalRead(MotorL1countB); //0忙藴炉氓鈧€櫭铰?1忙藴炉忙颅拢猫陆?  
   if (H_L1_B == 1)
   {
     motorL1++;
@@ -377,10 +409,9 @@ void Read_Moto_L1()
 void Read_Moto_L2()
 {
   /**
-     函数作用：读取左电机的编码器
-     返回值：  无
-   * */
-  H_L2_B = digitalRead(MotorL2countB); //0是倒转 1是正转
+     氓鈥÷矫︹€⒙懊ぢ脚撁р€澛寂∶幻ヂ忊€撁ヂ仿γр€澛得ε撀好♀€灻尖€撁犅伱モ劉篓
+     猫驴鈥澝モ€号久モ偓录茂录拧  忙鈥?   * */
+  H_L2_B = digitalRead(MotorL2countB); //0忙藴炉氓鈧€櫭铰?1忙藴炉忙颅拢猫陆?  
   if (H_L2_B == 1)
   {
     motorL2++;
@@ -397,10 +428,9 @@ void Read_Moto_L2()
 void Read_Moto_L3()
 {
   /**
-     函数作用：读取左电机的编码器
-     返回值：  无
-   * */
-  H_L3_B = digitalRead(MotorL3countB); //0是倒转 1是正转
+     氓鈥÷矫︹€⒙懊ぢ脚撁р€澛寂∶幻ヂ忊€撁ヂ仿γр€澛得ε撀好♀€灻尖€撁犅伱モ劉篓
+     猫驴鈥澝モ€号久モ偓录茂录拧  忙鈥?   * */
+  H_L3_B = digitalRead(MotorL3countB); //0忙藴炉氓鈧€櫭铰?1忙藴炉忙颅拢猫陆?  
   if (H_L3_B == 1)
   {
     motorL3++;
@@ -414,14 +444,12 @@ void Read_Moto_L3()
   //  Serial.print("Moto LB = ");
   //  Serial.print(motorL);
 }
-//读取右轮脉冲
-void Read_Moto_R1()
+//猫炉禄氓聫鈥撁ヂ徛趁铰ㄢ€炩€懊モ€犅?void Read_Moto_R1()
 {
   /**
-     函数作用：读取右电机的编码器
-     返回值：  无
-   * */
-  H_R1_B = digitalRead(MotorR1countB); //0是倒转 1是正转
+     氓鈥÷矫︹€⒙懊ぢ脚撁р€澛寂∶幻ヂ忊€撁ヂ徛趁р€澛得ε撀好♀€灻尖€撁犅伱モ劉篓
+     猫驴鈥澝モ€号久モ偓录茂录拧  忙鈥?   * */
+  H_R1_B = digitalRead(MotorR1countB); //0忙藴炉氓鈧€櫭铰?1忙藴炉忙颅拢猫陆?  
   if (H_R1_B == 0)
   {
     motorR1++;
@@ -439,10 +467,9 @@ void Read_Moto_R1()
 void Read_Moto_R2()
 {
   /**
-     函数作用：读取右电机的编码器
-     返回值：  无
-   * */
-  H_R2_B = digitalRead(MotorR2countB); //0是倒转 1是正转
+     氓鈥÷矫︹€⒙懊ぢ脚撁р€澛寂∶幻ヂ忊€撁ヂ徛趁р€澛得ε撀好♀€灻尖€撁犅伱モ劉篓
+     猫驴鈥澝モ€号久モ偓录茂录拧  忙鈥?   * */
+  H_R2_B = digitalRead(MotorR2countB); //0忙藴炉氓鈧€櫭铰?1忙藴炉忙颅拢猫陆?  
   if (H_R2_B == 0)
   {
     motorR2++;
@@ -461,10 +488,9 @@ void Read_Moto_R2()
 void Read_Moto_R3()
 {
   /**
-     函数作用：读取右电机的编码器
-     返回值：  无
-   * */
-  H_R3_B = digitalRead(MotorR3countB); //0是倒转 1是正转
+     氓鈥÷矫︹€⒙懊ぢ脚撁р€澛寂∶幻ヂ忊€撁ヂ徛趁р€澛得ε撀好♀€灻尖€撁犅伱モ劉篓
+     猫驴鈥澝モ€号久モ偓录茂录拧  忙鈥?   * */
+  H_R3_B = digitalRead(MotorR3countB); //0忙藴炉氓鈧€櫭铰?1忙藴炉忙颅拢猫陆?  
   if (H_R3_B == 1)
   {
     motorR3--;
@@ -483,9 +509,7 @@ void Read_Moto_R3()
 }
 
 /**
-     函数作用：电机行走，传入的L_v R_v为左右轮速度，范围-255~255，对应倒转和正转
-     返回值：  无
-      L      R
+     氓鈥÷矫︹€⒙懊ぢ脚撁р€澛寂∶р€澛得ε撀好∨捗德懊寂捗ぢ悸犆モ€βッ♀€濴_v R_v盲赂潞氓路娄氓聫鲁猫陆庐茅鈧该ヂ郝γ寂捗ㄅ捚捗モ€?255~255茂录艗氓炉鹿氓潞鈥澝モ偓鈥櫭铰モ€櫯捗βＣ?     猫驴鈥澝モ€号久モ偓录茂录拧  忙鈥?      L      R
       1------1
       2------2
       3------3
@@ -550,7 +574,7 @@ void Run_Moto_F(int L_v, int R_v, int L_Moto, int R_Moto)
   {
     R_v = -250;
   }
-  //前进，可设置左右轮速度
+  //氓鈥奥嵜库€好寂捗ヂ徛久铰ヂ仿γヂ徛趁铰┾偓鸥氓潞娄
   if (L_v > 0)
   {
     digitalWrite(L_Motor_A, 0);
@@ -600,6 +624,7 @@ void setup()
   pinMode(L1S, OUTPUT);
   pinMode(R1S, OUTPUT);
 S_L1 = S_R1 = S_L2 = S_R2 = S_L3 = S_R3 = 0;
+C_L1 = C_R1 = C_L2 = C_R2 = C_L3 = C_R3 = 0;
 
   pinMode(L2A, OUTPUT);
   pinMode(L2B, OUTPUT);
@@ -718,42 +743,36 @@ void getAngle()
   // sensor_mag_pub.publish(&str_mag);
   raw_imu_pub.publish(&raw_imu_msg);
 
-  //   Serial.print("加速度:");
-  //   Serial.print("前后: ");
+  //   Serial.print("氓艩聽茅鈧该ヂ郝?");
+  //   Serial.print("氓鈥奥嵜ヂ惻? ");
   //   Serial.println(Acc_fb);
-  // 后退是正的，前进是负的
-  //   Serial.print("左右: ");
+  // 氓聬沤茅鈧偓忙藴炉忙颅拢莽拧鈥灻寂捗モ€奥嵜库€好λ溌磁该?  //   Serial.print("氓路娄氓聫鲁: ");
   //   Serial.println(Acc_lr);
-  //   //左负右正
-  //   Serial.print("\t垂直:");
+  //   //氓路娄猫麓鸥氓聫鲁忙颅拢
+  //   Serial.print("\t氓啪鈥毭р€郝?");
   //   Serial.println(Acc_g);
-  //   // Serial.print("角加速度:");
-  // Serial.print("桶滚");
+  //   // Serial.print("猫搂鈥櫭ヅ犅犆┾偓鸥氓潞娄:");
+  // Serial.print("忙隆露忙禄拧");
   // Serial.print(Angle_tg);
-  // Serial.print(" 抬头");
+  // Serial.print(" 忙艩卢氓陇麓");
   // Serial.print(Angle_tt);
-  // Serial.print(" 方向");
+  // Serial.print(" 忙鈥撀姑ヂ愨€?);
   // Serial.println(Angle_fx);
-  //   Serial.print("角度:");
-  //   //桶滚 右边为负 左边为正
-  //   Serial.print("桶滚");
+  //   Serial.print("猫搂鈥櫭ヂ郝?");
+  //   //忙隆露忙禄拧 氓聫鲁猫戮鹿盲赂潞猫麓鸥 氓路娄猫戮鹿盲赂潞忙颅拢
+  //   Serial.print("忙隆露忙禄拧");
   //   Serial.print(AcAngle_tg);
-  //   //抬头 抬头为正 低头为负
-  //   Serial.print(" 抬头");
+  //   //忙艩卢氓陇麓 忙艩卢氓陇麓盲赂潞忙颅拢 盲陆沤氓陇麓盲赂潞猫麓鸥
+  //   Serial.print(" 忙艩卢氓陇麓");
   //   Serial.print(AcAngle_tt);
-  //   //方向 左边为正 右边为负
-  //   //车头为降压模块一方
-  //   Serial.print(" 方向");
+  //   //忙鈥撀姑ヂ愨€?氓路娄猫戮鹿盲赂潞忙颅拢 氓聫鲁猫戮鹿盲赂潞猫麓鸥
+  //   //猫陆娄氓陇麓盲赂潞茅鈩⒙嵜ヅ解€姑β∶ヂ濃€斆ぢ糕偓忙鈥?  //   Serial.print(" 忙鈥撀姑ヂ愨€?);
   //   Serial.println(AcAngle_fx);
   //   Serial.println(" ");
   //     delay(500);
   /*
-    acc是加速度
-    gyro是角度变化率(角加速度)
-    angle是角度
-    mag地磁/电子罗盘
-    Z是斜着倾斜的角度
-  */
+    acc忙藴炉氓艩聽茅鈧该ヂ郝?    gyro忙藴炉猫搂鈥櫭ヂ郝γヂ徦溍ヅ掆€撁解€?猫搂鈥櫭ヅ犅犆┾偓鸥氓潞娄)
+    angle忙藴炉猫搂鈥櫭ヂ?    mag氓艙掳莽拢聛/莽鈥澛得ヂ惷解€斆р€核?    Z忙藴炉忙鈥撆撁濃偓氓鈧久︹€撆撁♀€灻р€櫭ヂ?  */
 }
 void backGroundSystem()
 {

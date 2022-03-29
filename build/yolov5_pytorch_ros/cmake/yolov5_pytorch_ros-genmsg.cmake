@@ -24,7 +24,7 @@ add_custom_target(_yolov5_pytorch_ros_generate_messages_check_deps_${_filename}
 
 get_filename_component(_filename "/home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBoxes.msg" NAME_WE)
 add_custom_target(_yolov5_pytorch_ros_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "yolov5_pytorch_ros" "/home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBoxes.msg" "yolov5_pytorch_ros/BoundingBox:std_msgs/Header"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "yolov5_pytorch_ros" "/home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBoxes.msg" "std_msgs/Header:yolov5_pytorch_ros/BoundingBox"
 )
 
 #
@@ -42,7 +42,7 @@ _generate_msg_cpp(yolov5_pytorch_ros
 _generate_msg_cpp(yolov5_pytorch_ros
   "/home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBoxes.msg"
   "${MSG_I_FLAGS}"
-  "/home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBox.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBox.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/yolov5_pytorch_ros
 )
 
@@ -83,7 +83,7 @@ _generate_msg_eus(yolov5_pytorch_ros
 _generate_msg_eus(yolov5_pytorch_ros
   "/home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBoxes.msg"
   "${MSG_I_FLAGS}"
-  "/home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBox.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBox.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/yolov5_pytorch_ros
 )
 
@@ -124,7 +124,7 @@ _generate_msg_lisp(yolov5_pytorch_ros
 _generate_msg_lisp(yolov5_pytorch_ros
   "/home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBoxes.msg"
   "${MSG_I_FLAGS}"
-  "/home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBox.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBox.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/yolov5_pytorch_ros
 )
 
@@ -165,7 +165,7 @@ _generate_msg_nodejs(yolov5_pytorch_ros
 _generate_msg_nodejs(yolov5_pytorch_ros
   "/home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBoxes.msg"
   "${MSG_I_FLAGS}"
-  "/home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBox.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBox.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/yolov5_pytorch_ros
 )
 
@@ -206,7 +206,7 @@ _generate_msg_py(yolov5_pytorch_ros
 _generate_msg_py(yolov5_pytorch_ros
   "/home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBoxes.msg"
   "${MSG_I_FLAGS}"
-  "/home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBox.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBox.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/yolov5_pytorch_ros
 )
 

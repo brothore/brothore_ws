@@ -5,12 +5,18 @@ Run inference on images, videos, directories, streams, etc.
 Usage:
     $ python path/to/detect.py --source path/to/img.jpg --weights yolov5s.pt --img 640
 """
+import roslib
+import rospy
+from std_msgs.msg import Header
+from std_msgs.msg import String
+from sensor_msgs.msg import CompressedImage
+from sensor_msgs.msg import Image
 
 import argparse
 import os
 import sys
 from pathlib import Path
-# from __future__ import print_function
+
 import cv2
 import numpy as np
 import torch
@@ -22,7 +28,7 @@ ROOT2 = FILE.parents[0]  # YOLOv5 root directory
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
-# cv_cam = 0
+
 from models.experimental import attempt_load
 from utils.datasets import LoadImages, LoadStreams
 from utils.general import apply_classifier, check_img_size, check_imshow, check_requirements, check_suffix, colorstr, \
@@ -30,8 +36,47 @@ from utils.general import apply_classifier, check_img_size, check_imshow, check_
     strip_optimizer, xyxy2xywh
 from utils.plots import Annotator, colors
 from utils.torch_utils import load_classifier, select_device, time_sync
+ros_image=0
+def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scaleFill=False, scaleup=True):
+    # Resize image to a 32-pixel-multiple rectangle https://github.com/ultralytics/yolov3/issues/232
+    shape = img.shape[:2]  # current shape [height, width]
+    if isinstance(new_shape, int):
+        new_shape = (new_shape, new_shape)
 
+    # Scale ratio (new / old)
+    r = min(new_shape[0] / shape[0], new_shape[1] / shape[1])
+    if not scaleup:  # only scale down, do not scale up (for better test mAP)
+        r = min(r, 1.0)
 
+    # Compute padding
+    ratio = r, r  # width, height ratios
+    new_unpad = int(round(shape[1] * r)), int(round(shape[0] * r))
+    dw, dh = new_shape[1] - new_unpad[0], new_shape[0] - new_unpad[1]  # wh padding
+    if auto:  # minimum rectangle
+        dw, dh = np.mod(dw, 32), np.mod(dh, 32)  # wh padding
+    elif scaleFill:  # stretch
+        dw, dh = 0.0, 0.0
+        new_unpad = (new_shape[1], new_shape[0])
+        ratio = new_shape[1] / shape[1], new_shape[0] / shape[0]  # width, height ratios
+
+    dw /= 2  # divide padding into 2 sides
+    dh /= 2
+
+    if shape[::-1] != new_unpad:  # resize
+        img = cv2.resize(img, new_unpad, interpolation=cv2.INTER_LINEAR)
+    top, bottom = int(round(dh - 0.1)), int(round(dh + 0.1))
+    left, right = int(round(dw - 0.1)), int(round(dw + 0.1))
+    img = cv2.copyMakeBorder(img, top, bottom, left, right, cv2.BORDER_CONSTANT, value=color)  # add border
+    return img, ratio, (dw, dh)
+def loadimg(img):  # 接受opencv图片
+    img_size=640
+    cap=None
+    path=None
+    img0 = img
+    img = letterbox(img0, new_shape=img_size)[0]
+    img = img[:, :, ::-1].transpose(2, 0, 1)  # BGR to RGB, to 3x416x416
+    img = np.ascontiguousarray(img)
+    return path, img, img0, cap
 @torch.no_grad()
 def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
         source=ROOT / 'data/images',  # file/dir/URL/glob, 0 for webcam
@@ -58,23 +103,31 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
         hide_conf=False,  # hide confidences
         half=False,  # use FP16 half-precision inference
         dnn=False,  # use OpenCV DNN for ONNX inference
+        
         ):
     source = str(source)
     save_img = not nosave and not source.endswith('.txt')  # save inference images
     webcam = source.isnumeric() or source.endswith('.txt') or source.lower().startswith(
         ('rtsp://', 'rtmp://', 'http://', 'https://'))
-    
-    # #ROS connect
-    # ic = image_converter()
-    # rospy.init_node('image_converter', anonymous=True)
-    # check_requirements(exclude=('tensorboard', 'thop'))
-    # cv_show = ic.callback
-    
-    
+
     # Directories
     save_dir = increment_path(Path(project) / name, exist_ok=exist_ok)  # increment run
     (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
-
+    
+    # ROS
+    global ros_image
+    dataset = loadimg(img)
+    img = torch.zeros((1, 3, imgsz, imgsz), device=device)  # init img
+    _ = model(img.half() if half else img) if device.type != 'cpu' else None  # run once
+    path = dataset[0]
+    img = dataset[1]
+    im0s = dataset[2]
+    vid_cap = dataset[3]
+    img = torch.from_numpy(img).to(device)
+    img = img.half() if half else img.float()  # uint8 to fp16/32
+    img /= 255.0  # 0 - 255 to 0.0 - 1.0
+    
+    
     # Initialize
     set_logging()
     device = select_device(device)
@@ -129,7 +182,8 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
     if webcam:
         view_img = check_imshow()
         cudnn.benchmark = True  # set True to speed up constant image size inference
-        dataset = LoadStreams(source, img_size=imgsz, stride=stride, auto=pt)
+        # dataset = LoadStreams(source, img_size=imgsz, stride=stride, auto=pt)
+        dataset = loadimg(img)
         bs = len(dataset)  # batch_size
     else:
         dataset = LoadImages(source, img_size=imgsz, stride=stride, auto=pt)
@@ -271,6 +325,7 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
     if update:
         strip_optimizer(weights)  # update model (to fix SourceChangeWarning)
 
+
 def parse_opt():
     parser = argparse.ArgumentParser()
     parser.add_argument('--weights', nargs='+', type=str, default=ROOT2 / 'runs/train/exp6/weights/best.pt', help='model path(s)')
@@ -304,11 +359,9 @@ def parse_opt():
     return opt
 
 
-
 def main(opt):
-    
-    run(**vars(opt))
-    
+    check_requirements(exclude=('tensorboard', 'thop'))
+    run(**vars(opt),)
 
 
 if __name__ == "__main__":

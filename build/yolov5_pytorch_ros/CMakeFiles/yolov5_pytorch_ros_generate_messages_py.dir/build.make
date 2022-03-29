@@ -65,8 +65,8 @@ yolov5_pytorch_ros/CMakeFiles/yolov5_pytorch_ros_generate_messages_py: /home/ubu
 
 /home/ubuntu/linorobot_ws/devel/lib/python3/dist-packages/yolov5_pytorch_ros/msg/_BoundingBoxes.py: /opt/ros/noetic/lib/genpy/genmsg_py.py
 /home/ubuntu/linorobot_ws/devel/lib/python3/dist-packages/yolov5_pytorch_ros/msg/_BoundingBoxes.py: /home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBoxes.msg
-/home/ubuntu/linorobot_ws/devel/lib/python3/dist-packages/yolov5_pytorch_ros/msg/_BoundingBoxes.py: /home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBox.msg
 /home/ubuntu/linorobot_ws/devel/lib/python3/dist-packages/yolov5_pytorch_ros/msg/_BoundingBoxes.py: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+/home/ubuntu/linorobot_ws/devel/lib/python3/dist-packages/yolov5_pytorch_ros/msg/_BoundingBoxes.py: /home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBox.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/ubuntu/linorobot_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating Python from MSG yolov5_pytorch_ros/BoundingBoxes"
 	cd /home/ubuntu/linorobot_ws/build/yolov5_pytorch_ros && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genpy/cmake/../../../lib/genpy/genmsg_py.py /home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBoxes.msg -Iyolov5_pytorch_ros:/home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Isensor_msgs:/opt/ros/noetic/share/sensor_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p yolov5_pytorch_ros -o /home/ubuntu/linorobot_ws/devel/lib/python3/dist-packages/yolov5_pytorch_ros/msg
 
