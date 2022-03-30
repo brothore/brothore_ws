@@ -1,4 +1,4 @@
-//猫碌掳氓藛露氓庐拧猫路聺莽娄?1m,ctrl+k ctrl+1
+//èµ°åˆ¶å®šè·ç¦?1m,ctrl+k ctrl+1
 #include <ros.h>
 #include <std_msgs/String.h>
 #include <std_msgs/Empty.h>
@@ -20,24 +20,24 @@
 #define IMU_PUBLISH_RATE 20 //hz
 #define COMMAND_RATE 20     //hz
 #define DEBUG_RATE 5
-#define MotorL1countA 21 //莽录鈥撁犅伱モ劉篓A
-#define MotorL1countB 45 //莽录鈥撁犅伱モ劉篓B
+#define MotorL1countA 21 //ç¼–ç å™¨A
+#define MotorL1countB 45 //ç¼–ç å™¨B
 
-#define MotorR1countA 20 //莽录鈥撁犅伱モ劉篓A
-#define MotorR1countB 44 //莽录鈥撁犅伱モ劉篓B
+#define MotorR1countA 20 //ç¼–ç å™¨A
+#define MotorR1countB 44 //ç¼–ç å™¨B
 
-#define MotorL2countA 18 //莽录鈥撁犅伱モ劉篓A
-#define MotorL2countB 43 //莽录鈥撁犅伱モ劉篓B
+#define MotorL2countA 18 //ç¼–ç å™¨A
+#define MotorL2countB 43 //ç¼–ç å™¨B
 
-#define MotorR2countA 2 //莽录鈥撁犅伱モ劉篓A
-#define MotorR2countB 34 //莽录鈥撁犅伱モ劉篓B
+#define MotorR2countA 2 //ç¼–ç å™¨A
+#define MotorR2countB 34 //ç¼–ç å™¨B
 
-#define MotorL3countA 19 //莽录鈥撁犅伱モ劉篓A
-#define MotorL3countB 42 //莽录鈥撁犅伱モ劉篓B
+#define MotorL3countA 19 //ç¼–ç å™¨A
+#define MotorL3countB 42 //ç¼–ç å™¨B
 
 
-#define MotorR3countA 3 //莽录鈥撁犅伱モ劉篓A
-#define MotorR3countB 33 //莽录鈥撁犅伱モ劉篓B
+#define MotorR3countA 3 //ç¼–ç å™¨A
+#define MotorR3countB 33 //ç¼–ç å™¨B
 // #define K_P 0.6 // P constant
 // #define K_I 0.3 // I constant
 // #define K_D 0.5 // D constant
@@ -89,18 +89,30 @@ int H_L2_B = 0;
 int H_R2_B = 0;
 int H_L3_B = 0;
 int H_R3_B = 0;
-volatile float motorL1 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ仿γ铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?volatile float motorR1 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ徛趁铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?volatile float motorL2 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ仿γ铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?volatile float motorR2 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ徛趁铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?volatile float motorL3 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ仿γ铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?volatile float motorR3 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ徛趁铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?
-volatile float S_motorL1 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ仿γ铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?volatile float S_motorR1 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ徛趁铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?volatile float S_motorL2 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ仿γ铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?volatile float S_motorR2 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ徛趁铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?volatile float S_motorL3 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ仿γ铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?volatile float S_motorR3 = 0; //盲赂颅忙鈥撀ヂ徦溍┾€÷徝寂捗ヂ徛趁铰ヂ惷ㄢ€炩€懊モ€犅裁∶︹€⒙?
+volatile float motorL1 = 0; //ä¸­æ–­å˜é‡ï¼Œå·¦è½®å­è„‰å†²è®¡æ•°
+volatile float motorR1 = 0; //ä¸­æ–­å˜é‡ï¼Œå³è½®å­è„‰å†²è®¡æ•°
+volatile float motorL2 = 0; //ä¸­æ–­å˜é‡ï¼Œå·¦è½®å­è„‰å†²è®¡æ•°
+volatile float motorR2 = 0; //ä¸­æ–­å˜é‡ï¼Œå³è½®å­è„‰å†²è®¡æ•°
+volatile float motorL3 = 0; //ä¸­æ–­å˜é‡ï¼Œå·¦è½®å­è„‰å†²è®¡æ•°
+volatile float motorR3 = 0; //ä¸­æ–­å˜é‡ï¼Œå³è½®å­è„‰å†²è®¡æ•°
+
+volatile float S_motorL1 = 0; //ä¸­æ–­å˜é‡ï¼Œå·¦è½®å­è„‰å†²è®¡æ•°
+volatile float S_motorR1 = 0; //ä¸­æ–­å˜é‡ï¼Œå³è½®å­è„‰å†²è®¡æ•°
+volatile float S_motorL2 = 0; //ä¸­æ–­å˜é‡ï¼Œå·¦è½®å­è„‰å†²è®¡æ•°
+volatile float S_motorR2 = 0; //ä¸­æ–­å˜é‡ï¼Œå³è½®å­è„‰å†²è®¡æ•°
+volatile float S_motorL3 = 0; //ä¸­æ–­å˜é‡ï¼Œå·¦è½®å­è„‰å†²è®¡æ•°
+volatile float S_motorR3 = 0; //ä¸­æ–­å˜é‡ï¼Œå³è½®å­è„‰å†²è®¡æ•°
+
 
 float S_L1, S_R1, S_L2, S_R2, S_L3, S_R3;
 float C_L1, C_R1, C_L2, C_R2, C_L3, C_R3;
 
-float v1 = 0;               //氓聧鈥⒚ぢ铰峬/s
-float v2 = 0;               //氓聧鈥⒚ぢ铰峬/s
-float v3 = 0;               //氓聧鈥⒚ぢ铰峬/s
-float v4 = 0;               //氓聧鈥⒚ぢ铰峬/s
-float v5 = 0;               //氓聧鈥⒚ぢ铰峬/s
-float v6 = 0;               //氓聧鈥⒚ぢ铰峬/s
+float v1 = 0;               //å•ä½m/s
+float v2 = 0;               //å•ä½m/s
+float v3 = 0;               //å•ä½m/s
+float v4 = 0;               //å•ä½m/s
+float v5 = 0;               //å•ä½m/s
+float v6 = 0;               //å•ä½m/s
 // Servo myservo;
 float g_req_linear_vel_x = 0;
 float g_req_linear_vel_y = 0;
@@ -149,7 +161,8 @@ ros::Subscriber<geometry_msgs::Twist> sub("/cmd_vel", messageCb);
 ros::Subscriber<lino_msgs::PID> pid_sub("pid", PIDCallback);
 ros::Subscriber<lino_msgs::car_param> car_sub("car_param",CarCallback);
 
-//莽搂禄氓艩篓盲驴隆忙聛炉氓鈥号久捌?void messageCb(const geometry_msgs::Twist &cmd_vel)
+//ç§»åŠ¨ä¿¡æ¯å›žè°ƒ
+void messageCb(const geometry_msgs::Twist &cmd_vel)
 {
   lasttim = millis();
   Serial.println("recevied");
@@ -157,7 +170,8 @@ ros::Subscriber<lino_msgs::car_param> car_sub("car_param",CarCallback);
   vel_th = cmd_vel.angular.z;
   g_prev_command_time = millis();
 }
-//猫隆艗猫碌掳氓鈥÷矫︹€⒙?void moveBase()
+//è¡Œèµ°å‡½æ•°
+void moveBase()
 {
   // left_vel = vel_x - (vel_th*W_car);
   // right_vel = vel_x + (vel_th * W_car);
@@ -218,7 +232,8 @@ if (S_avr>=(1))
   // str_wheel.L3_PID = l3_pid;
   // str_wheel.R3_PID = r3_pid;
 }
-//氓聛艙忙颅垄氓鈥÷矫︹€⒙?void stopBase()
+//åœæ­¢å‡½æ•°
+void stopBase()
 {
   vel_x = 0;
   vel_th = 0;
@@ -228,8 +243,8 @@ if (S_avr>=(1))
 }
 
 /**
-     氓鈥÷矫︹€⒙懊ぢ脚撁р€澛寂∶幻ヂ忊€撁ヂ仿γヂ徛趁р€澛得ε撀好♀€灻┾偓鸥氓潞娄
-     猫驴鈥澝モ€号久モ偓录茂录拧  忙鈥?     
+     å‡½æ•°ä½œç”¨ï¼šè¯»å–å·¦å³ç”µæœºçš„é€Ÿåº¦
+     è¿”å›žå€¼ï¼š  æ—?     
     r3------l3
     l2------l1
     r2------r1
@@ -238,40 +253,48 @@ if (S_avr>=(1))
 void Read_Moto_V(int ifDebug)
 {
 
-  //猫驴鈩⒚λ溌幻ヂ忊€撁р€澛得ε撀好┾偓鸥氓潞娄莽拧鈥灻モ€÷矫︹€? 
+  //è¿™æ˜¯è¯»å–ç”µæœºé€Ÿåº¦çš„å‡½æ•? 
   if(vel_flag == 0)
   {
   nowtime = millis() + 50; 
   vel_flag = 1;
-  } //猫炉?0忙炉芦莽搂鈥?  attachInterrupt(digitalPinToInterrupt(MotorL1countA), Read_Moto_L1, RISING); //氓路娄猫陆庐猫鈥炩€懊モ€犅裁ヂ尖偓盲赂颅忙鈥撀∶︹€⒙?  attachInterrupt(digitalPinToInterrupt(MotorR1countA), Read_Moto_R1, RISING); //氓聫鲁猫陆庐猫鈥炩€懊モ€犅裁ヂ尖偓盲赂颅忙鈥撀∶︹€⒙?  attachInterrupt(digitalPinToInterrupt(MotorL2countA), Read_Moto_L2, RISING); //氓路娄猫陆庐猫鈥炩€懊モ€犅裁ヂ尖偓盲赂颅忙鈥撀∶︹€⒙?  attachInterrupt(digitalPinToInterrupt(MotorR2countA), Read_Moto_R2, RISING); //氓聫鲁猫陆庐猫鈥炩€懊モ€犅裁ヂ尖偓盲赂颅忙鈥撀∶︹€⒙?  attachInterrupt(digitalPinToInterrupt(MotorL3countA), Read_Moto_L3, RISING); //氓路娄猫陆庐猫鈥炩€懊モ€犅裁ヂ尖偓盲赂颅忙鈥撀∶︹€⒙?  attachInterrupt(digitalPinToInterrupt(MotorR3countA), Read_Moto_R3, RISING); //氓聫鲁猫陆庐猫鈥炩€懊モ€犅裁ヂ尖偓盲赂颅忙鈥撀∶︹€⒙?  if (millis() >= nowtime){                                          //猫戮戮氓藛掳50忙炉芦莽搂鈥櫭モ€β趁┾€斅ぢ嘎︹€撀?    detachInterrupt(digitalPinToInterrupt(MotorL1countA)); //氓路娄猫陆庐猫鈥炩€懊モ€犅裁モ€β趁ぢ嘎︹€撀∶︹€?    
-    detachInterrupt(digitalPinToInterrupt(MotorR1countA)); //氓聫鲁猫陆庐猫鈥炩€懊モ€犅裁モ€β趁ぢ嘎︹€撀∶︹€?    
-    detachInterrupt(digitalPinToInterrupt(MotorL2countA)); //氓路娄猫陆庐猫鈥炩€懊モ€犅裁モ€β趁ぢ嘎︹€撀∶︹€?    
-    detachInterrupt(digitalPinToInterrupt(MotorR2countA)); //氓聫鲁猫陆庐猫鈥炩€懊モ€犅裁モ€β趁ぢ嘎︹€撀∶︹€?    
-    detachInterrupt(digitalPinToInterrupt(MotorL3countA)); //氓路娄猫陆庐猫鈥炩€懊モ€犅裁モ€β趁ぢ嘎︹€撀∶︹€?    
-    detachInterrupt(digitalPinToInterrupt(MotorR3countA)); //氓聫鲁猫陆庐猫鈥炩€懊モ€犅裁モ€β趁ぢ嘎︹€撀∶︹€?    
+  } //è¯?0æ¯«ç§’
+  attachInterrupt(digitalPinToInterrupt(MotorL1countA), Read_Moto_L1, RISING); //å·¦è½®è„‰å†²å¼€ä¸­æ–­è®¡æ•°
+  attachInterrupt(digitalPinToInterrupt(MotorR1countA), Read_Moto_R1, RISING); //å³è½®è„‰å†²å¼€ä¸­æ–­è®¡æ•°
+  attachInterrupt(digitalPinToInterrupt(MotorL2countA), Read_Moto_L2, RISING); //å·¦è½®è„‰å†²å¼€ä¸­æ–­è®¡æ•°
+  attachInterrupt(digitalPinToInterrupt(MotorR2countA), Read_Moto_R2, RISING); //å³è½®è„‰å†²å¼€ä¸­æ–­è®¡æ•°
+  attachInterrupt(digitalPinToInterrupt(MotorL3countA), Read_Moto_L3, RISING); //å·¦è½®è„‰å†²å¼€ä¸­æ–­è®¡æ•°
+  attachInterrupt(digitalPinToInterrupt(MotorR3countA), Read_Moto_R3, RISING); //å³è½®è„‰å†²å¼€ä¸­æ–­è®¡æ•°
+  if (millis() >= nowtime){                                          //è¾¾åˆ°50æ¯«ç§’å…³é—­ä¸­æ–­
+    detachInterrupt(digitalPinToInterrupt(MotorL1countA)); //å·¦è½®è„‰å†²å…³ä¸­æ–­è®¡æ•?    
+    detachInterrupt(digitalPinToInterrupt(MotorR1countA)); //å³è½®è„‰å†²å…³ä¸­æ–­è®¡æ•?    
+    detachInterrupt(digitalPinToInterrupt(MotorL2countA)); //å·¦è½®è„‰å†²å…³ä¸­æ–­è®¡æ•?    
+    detachInterrupt(digitalPinToInterrupt(MotorR2countA)); //å³è½®è„‰å†²å…³ä¸­æ–­è®¡æ•?    
+    detachInterrupt(digitalPinToInterrupt(MotorL3countA)); //å·¦è½®è„‰å†²å…³ä¸­æ–­è®¡æ•?    
+    detachInterrupt(digitalPinToInterrupt(MotorR3countA)); //å³è½®è„‰å†²å…³ä¸­æ–­è®¡æ•?    
     float V_L1, V_R1, V_L2, V_R2, V_L3, V_R3;
     V_L1 = V_R1 = V_L2 = V_R2 = V_L3 = V_R3 = 0;
-    //390忙聺楼猫鈥÷铰┾偓鸥忙炉鈥?:30盲赂颅莽拧鈥?0盲鹿藴盲禄楼莽录鈥撁犅伱モ劉篓莽潞驴忙鈥?3
-    V_L1 = ((motorL1 / 390) * R_wheel  * PI) / 0.05; //氓聧鈥⒚ぢ铰峬/s
-    V_R1 = ((motorR1 / 390) * R_wheel  * PI) / 0.05; //氓聧鈥⒚ぢ铰峬/s
-    V_L2 = ((motorL2 / 390) * R_wheel  * PI) / 0.05; //氓聧鈥⒚ぢ铰峬/s
-    V_R2 = ((motorR2 / 390) * R_wheel  * PI) / 0.05; //氓聧鈥⒚ぢ铰峬/s
-    V_L3 = ((motorL3 / 390) * R_wheel  * PI) / 0.05; //氓聧鈥⒚ぢ铰峬/s
-    V_R3 = ((motorR3 / 390) * R_wheel  * PI) / 0.05; //氓聧鈥⒚ぢ铰峬/s
+    //390æ¥è‡ªè½¬é€Ÿæ¯”1:30ä¸­çš„30ä¹˜ä»¥ç¼–ç å™¨çº¿æ•?3
+    V_L1 = ((motorL1 / 390) * R_wheel  * PI) / 0.05; //å•ä½m/s
+    V_R1 = ((motorR1 / 390) * R_wheel  * PI) / 0.05; //å•ä½m/s
+    V_L2 = ((motorL2 / 390) * R_wheel  * PI) / 0.05; //å•ä½m/s
+    V_R2 = ((motorR2 / 390) * R_wheel  * PI) / 0.05; //å•ä½m/s
+    V_L3 = ((motorL3 / 390) * R_wheel  * PI) / 0.05; //å•ä½m/s
+    V_R3 = ((motorR3 / 390) * R_wheel  * PI) / 0.05; //å•ä½m/s
     
-    C_L1 = ((S_motorL1 / 390) ) ; //氓聧鈥⒚ぢ铰峬
-    C_R1 = ((S_motorR1 / 390) ) ; //氓聧鈥⒚ぢ铰峬
-    C_L2 = ((S_motorL2 / 390) ) ; //氓聧鈥⒚ぢ铰峬
-    C_R2 = ((S_motorR2 / 390) ) ; //氓聧鈥⒚ぢ铰峬
-    C_L3 = ((S_motorL3 / 390) ) ; //氓聧鈥⒚ぢ铰峬
-    C_R3 = ((S_motorR3 / 390) ) ; //氓聧鈥⒚ぢ铰峬
+    C_L1 = ((S_motorL1 / 390) ) ; //å•ä½m
+    C_R1 = ((S_motorR1 / 390) ) ; //å•ä½m
+    C_L2 = ((S_motorL2 / 390) ) ; //å•ä½m
+    C_R2 = ((S_motorR2 / 390) ) ; //å•ä½m
+    C_L3 = ((S_motorL3 / 390) ) ; //å•ä½m
+    C_R3 = ((S_motorR3 / 390) ) ; //å•ä½m
 
-    S_L1 = ((S_motorL1 / 390) * R_wheel  * PI) ; //氓聧鈥⒚ぢ铰峬
-    S_R1 = ((S_motorR1 / 390) * R_wheel  * PI) ; //氓聧鈥⒚ぢ铰峬
-    S_L2 = ((S_motorL2 / 390) * R_wheel  * PI) ; //氓聧鈥⒚ぢ铰峬
-    S_R2 = ((S_motorR2 / 390) * R_wheel  * PI) ; //氓聧鈥⒚ぢ铰峬
-    S_L3 = ((S_motorL3 / 390) * R_wheel  * PI) ; //氓聧鈥⒚ぢ铰峬
-    S_R3 = ((S_motorR3 / 390) * R_wheel  * PI) ; //氓聧鈥⒚ぢ铰峬
+    S_L1 = ((S_motorL1 / 390) * R_wheel  * PI) ; //å•ä½m
+    S_R1 = ((S_motorR1 / 390) * R_wheel  * PI) ; //å•ä½m
+    S_L2 = ((S_motorL2 / 390) * R_wheel  * PI) ; //å•ä½m
+    S_R2 = ((S_motorR2 / 390) * R_wheel  * PI) ; //å•ä½m
+    S_L3 = ((S_motorL3 / 390) * R_wheel  * PI) ; //å•ä½m
+    S_R3 = ((S_motorR3 / 390) * R_wheel  * PI) ; //å•ä½m
     v1 = V_L1;
     v2 = V_R1;
     v3 = V_L2;
@@ -329,7 +352,8 @@ void Read_Moto_V(int ifDebug)
      motorL3 = 0;
      motorR3 = 0;
   }
-  // 氓聫藴氓沤鈥姑モ劉篓盲赂鈧韭姑ぢ嘎好铰γヂぢ?}
+  // å˜åŽ‹å™¨ä¸€è¾¹ä¸ºè½¦å¤´
+}
 
 void PIDCallback(const lino_msgs::PID &pid)
 {
@@ -356,11 +380,11 @@ void CarCallback(const lino_msgs::car_param &car_p){
 //       S_R2=0;
 //       S_R3=0;
       
-// detachInterrupt(digitalPinToInterrupt(MotorL1countA)); //氓路娄猫陆庐猫鈥炩€懊モ€犅裁モ€β趁ぢ嘎︹€撀∶︹€?    
-//     detachInterrupt(digitalPinToInterrupt(MotorR1countA)); //氓聫鲁猫陆庐猫鈥炩€懊モ€犅裁モ€β趁ぢ嘎︹€撀∶︹€?    
-//     detachInterrupt(digitalPinToInterrupt(MotorL2countA)); //氓路娄猫陆庐猫鈥炩€懊モ€犅裁モ€β趁ぢ嘎︹€撀∶︹€?    
-//     detachInterrupt(digitalPinToInterrupt(MotorR2countA)); //氓聫鲁猫陆庐猫鈥炩€懊モ€犅裁モ€β趁ぢ嘎︹€撀∶︹€?    
-//     detachInterrupt(digitalPinToInterrupt(MotorL3countA)); //氓路娄猫陆庐猫鈥炩€懊モ€犅裁モ€β趁ぢ嘎︹€撀∶︹€?    
+// detachInterrupt(digitalPinToInterrupt(MotorL1countA)); //å·¦è½®è„‰å†²å…³ä¸­æ–­è®¡æ•?    
+//     detachInterrupt(digitalPinToInterrupt(MotorR1countA)); //å³è½®è„‰å†²å…³ä¸­æ–­è®¡æ•?    
+//     detachInterrupt(digitalPinToInterrupt(MotorL2countA)); //å·¦è½®è„‰å†²å…³ä¸­æ–­è®¡æ•?    
+//     detachInterrupt(digitalPinToInterrupt(MotorR2countA)); //å³è½®è„‰å†²å…³ä¸­æ–­è®¡æ•?    
+//     detachInterrupt(digitalPinToInterrupt(MotorL3countA)); //å·¦è½®è„‰å†²å…³ä¸­æ–­è®¡æ•?    
 //     detachInterrupt(digitalPinToInterrupt(MotorR3countA));
 //       C_L1=0;
 //       C_L2=0;
@@ -392,7 +416,7 @@ void CarCallback(const lino_msgs::car_param &car_p){
 void Read_Moto_L1()
 {
 
-  H_L1_B = digitalRead(MotorL1countB); //0忙藴炉氓鈧€櫭铰?1忙藴炉忙颅拢猫陆?  
+  H_L1_B = digitalRead(MotorL1countB); //0æ˜¯å€’è½¬ 1æ˜¯æ­£è½?  
   if (H_L1_B == 1)
   {
     motorL1++;
@@ -409,9 +433,9 @@ void Read_Moto_L1()
 void Read_Moto_L2()
 {
   /**
-     氓鈥÷矫︹€⒙懊ぢ脚撁р€澛寂∶幻ヂ忊€撁ヂ仿γр€澛得ε撀好♀€灻尖€撁犅伱モ劉篓
-     猫驴鈥澝モ€号久モ偓录茂录拧  忙鈥?   * */
-  H_L2_B = digitalRead(MotorL2countB); //0忙藴炉氓鈧€櫭铰?1忙藴炉忙颅拢猫陆?  
+     å‡½æ•°ä½œç”¨ï¼šè¯»å–å·¦ç”µæœºçš„ç¼–ç å™¨
+     è¿”å›žå€¼ï¼š  æ—?   * */
+  H_L2_B = digitalRead(MotorL2countB); //0æ˜¯å€’è½¬ 1æ˜¯æ­£è½?  
   if (H_L2_B == 1)
   {
     motorL2++;
@@ -428,9 +452,9 @@ void Read_Moto_L2()
 void Read_Moto_L3()
 {
   /**
-     氓鈥÷矫︹€⒙懊ぢ脚撁р€澛寂∶幻ヂ忊€撁ヂ仿γр€澛得ε撀好♀€灻尖€撁犅伱モ劉篓
-     猫驴鈥澝モ€号久モ偓录茂录拧  忙鈥?   * */
-  H_L3_B = digitalRead(MotorL3countB); //0忙藴炉氓鈧€櫭铰?1忙藴炉忙颅拢猫陆?  
+     å‡½æ•°ä½œç”¨ï¼šè¯»å–å·¦ç”µæœºçš„ç¼–ç å™¨
+     è¿”å›žå€¼ï¼š  æ—?   * */
+  H_L3_B = digitalRead(MotorL3countB); //0æ˜¯å€’è½¬ 1æ˜¯æ­£è½?  
   if (H_L3_B == 1)
   {
     motorL3++;
@@ -444,12 +468,13 @@ void Read_Moto_L3()
   //  Serial.print("Moto LB = ");
   //  Serial.print(motorL);
 }
-//猫炉禄氓聫鈥撁ヂ徛趁铰ㄢ€炩€懊モ€犅?void Read_Moto_R1()
+//è¯»å–å³è½®è„‰å†²
+void Read_Moto_R1()
 {
   /**
-     氓鈥÷矫︹€⒙懊ぢ脚撁р€澛寂∶幻ヂ忊€撁ヂ徛趁р€澛得ε撀好♀€灻尖€撁犅伱モ劉篓
-     猫驴鈥澝モ€号久モ偓录茂录拧  忙鈥?   * */
-  H_R1_B = digitalRead(MotorR1countB); //0忙藴炉氓鈧€櫭铰?1忙藴炉忙颅拢猫陆?  
+     å‡½æ•°ä½œç”¨ï¼šè¯»å–å³ç”µæœºçš„ç¼–ç å™¨
+     è¿”å›žå€¼ï¼š  æ—?   * */
+  H_R1_B = digitalRead(MotorR1countB); //0æ˜¯å€’è½¬ 1æ˜¯æ­£è½?  
   if (H_R1_B == 0)
   {
     motorR1++;
@@ -467,9 +492,9 @@ void Read_Moto_L3()
 void Read_Moto_R2()
 {
   /**
-     氓鈥÷矫︹€⒙懊ぢ脚撁р€澛寂∶幻ヂ忊€撁ヂ徛趁р€澛得ε撀好♀€灻尖€撁犅伱モ劉篓
-     猫驴鈥澝モ€号久モ偓录茂录拧  忙鈥?   * */
-  H_R2_B = digitalRead(MotorR2countB); //0忙藴炉氓鈧€櫭铰?1忙藴炉忙颅拢猫陆?  
+     å‡½æ•°ä½œç”¨ï¼šè¯»å–å³ç”µæœºçš„ç¼–ç å™¨
+     è¿”å›žå€¼ï¼š  æ—?   * */
+  H_R2_B = digitalRead(MotorR2countB); //0æ˜¯å€’è½¬ 1æ˜¯æ­£è½?  
   if (H_R2_B == 0)
   {
     motorR2++;
@@ -488,9 +513,9 @@ void Read_Moto_R2()
 void Read_Moto_R3()
 {
   /**
-     氓鈥÷矫︹€⒙懊ぢ脚撁р€澛寂∶幻ヂ忊€撁ヂ徛趁р€澛得ε撀好♀€灻尖€撁犅伱モ劉篓
-     猫驴鈥澝モ€号久モ偓录茂录拧  忙鈥?   * */
-  H_R3_B = digitalRead(MotorR3countB); //0忙藴炉氓鈧€櫭铰?1忙藴炉忙颅拢猫陆?  
+     å‡½æ•°ä½œç”¨ï¼šè¯»å–å³ç”µæœºçš„ç¼–ç å™¨
+     è¿”å›žå€¼ï¼š  æ—?   * */
+  H_R3_B = digitalRead(MotorR3countB); //0æ˜¯å€’è½¬ 1æ˜¯æ­£è½?  
   if (H_R3_B == 1)
   {
     motorR3--;
@@ -509,7 +534,7 @@ void Read_Moto_R3()
 }
 
 /**
-     氓鈥÷矫︹€⒙懊ぢ脚撁р€澛寂∶р€澛得ε撀好∨捗德懊寂捗ぢ悸犆モ€βッ♀€濴_v R_v盲赂潞氓路娄氓聫鲁猫陆庐茅鈧该ヂ郝γ寂捗ㄅ捚捗モ€?255~255茂录艗氓炉鹿氓潞鈥澝モ偓鈥櫭铰モ€櫯捗βＣ?     猫驴鈥澝モ€号久モ偓录茂录拧  忙鈥?      L      R
+     å‡½æ•°ä½œç”¨ï¼šç”µæœºè¡Œèµ°ï¼Œä¼ å…¥çš„L_v R_vä¸ºå·¦å³è½®é€Ÿåº¦ï¼ŒèŒƒå›?255~255ï¼Œå¯¹åº”å€’è½¬å’Œæ­£è½?     è¿”å›žå€¼ï¼š  æ—?      L      R
       1------1
       2------2
       3------3
@@ -574,7 +599,7 @@ void Run_Moto_F(int L_v, int R_v, int L_Moto, int R_Moto)
   {
     R_v = -250;
   }
-  //氓鈥奥嵜库€好寂捗ヂ徛久铰ヂ仿γヂ徛趁铰┾偓鸥氓潞娄
+  //å‰è¿›ï¼Œå¯è®¾ç½®å·¦å³è½®é€Ÿåº¦
   if (L_v > 0)
   {
     digitalWrite(L_Motor_A, 0);
@@ -743,36 +768,38 @@ void getAngle()
   // sensor_mag_pub.publish(&str_mag);
   raw_imu_pub.publish(&raw_imu_msg);
 
-  //   Serial.print("氓艩聽茅鈧该ヂ郝?");
-  //   Serial.print("氓鈥奥嵜ヂ惻? ");
+  //   Serial.print("åŠ é€Ÿåº¦:");
+  //   Serial.print("å‰åŽ: ");
   //   Serial.println(Acc_fb);
-  // 氓聬沤茅鈧偓忙藴炉忙颅拢莽拧鈥灻寂捗モ€奥嵜库€好λ溌磁该?  //   Serial.print("氓路娄氓聫鲁: ");
+  // åŽé€€æ˜¯æ­£çš„ï¼Œå‰è¿›æ˜¯è´Ÿçš?  //   Serial.print("å·¦å³: ");
   //   Serial.println(Acc_lr);
-  //   //氓路娄猫麓鸥氓聫鲁忙颅拢
-  //   Serial.print("\t氓啪鈥毭р€郝?");
+  //   //å·¦è´Ÿå³æ­£
+  //   Serial.print("\tåž‚ç›´:");
   //   Serial.println(Acc_g);
-  //   // Serial.print("猫搂鈥櫭ヅ犅犆┾偓鸥氓潞娄:");
-  // Serial.print("忙隆露忙禄拧");
+  //   // Serial.print("è§’åŠ é€Ÿåº¦:");
+  // Serial.print("æ¡¶æ»š");
   // Serial.print(Angle_tg);
-  // Serial.print(" 忙艩卢氓陇麓");
+  // Serial.print(" æŠ¬å¤´");
   // Serial.print(Angle_tt);
-  // Serial.print(" 忙鈥撀姑ヂ愨€?);
+  // Serial.print(" æ–¹å‘");
   // Serial.println(Angle_fx);
-  //   Serial.print("猫搂鈥櫭ヂ郝?");
-  //   //忙隆露忙禄拧 氓聫鲁猫戮鹿盲赂潞猫麓鸥 氓路娄猫戮鹿盲赂潞忙颅拢
-  //   Serial.print("忙隆露忙禄拧");
+  //   Serial.print("è§’åº¦:");
+  //   //æ¡¶æ»š å³è¾¹ä¸ºè´Ÿ å·¦è¾¹ä¸ºæ­£
+  //   Serial.print("æ¡¶æ»š");
   //   Serial.print(AcAngle_tg);
-  //   //忙艩卢氓陇麓 忙艩卢氓陇麓盲赂潞忙颅拢 盲陆沤氓陇麓盲赂潞猫麓鸥
-  //   Serial.print(" 忙艩卢氓陇麓");
+  //   //æŠ¬å¤´ æŠ¬å¤´ä¸ºæ­£ ä½Žå¤´ä¸ºè´Ÿ
+  //   Serial.print(" æŠ¬å¤´");
   //   Serial.print(AcAngle_tt);
-  //   //忙鈥撀姑ヂ愨€?氓路娄猫戮鹿盲赂潞忙颅拢 氓聫鲁猫戮鹿盲赂潞猫麓鸥
-  //   //猫陆娄氓陇麓盲赂潞茅鈩⒙嵜ヅ解€姑β∶ヂ濃€斆ぢ糕偓忙鈥?  //   Serial.print(" 忙鈥撀姑ヂ愨€?);
+  //   //æ–¹å‘ å·¦è¾¹ä¸ºæ­£ å³è¾¹ä¸ºè´Ÿ
+  //   //è½¦å¤´ä¸ºé™åŽ‹æ¨¡å—ä¸€æ–?  //   Serial.print(" æ–¹å‘");
   //   Serial.println(AcAngle_fx);
   //   Serial.println(" ");
   //     delay(500);
   /*
-    acc忙藴炉氓艩聽茅鈧该ヂ郝?    gyro忙藴炉猫搂鈥櫭ヂ郝γヂ徦溍ヅ掆€撁解€?猫搂鈥櫭ヅ犅犆┾偓鸥氓潞娄)
-    angle忙藴炉猫搂鈥櫭ヂ?    mag氓艙掳莽拢聛/莽鈥澛得ヂ惷解€斆р€核?    Z忙藴炉忙鈥撆撁濃偓氓鈧久︹€撆撁♀€灻р€櫭ヂ?  */
+    accæ˜¯åŠ é€Ÿåº¦
+    gyroæ˜¯è§’åº¦å˜åŒ–çŽ‡(è§’åŠ é€Ÿåº¦)
+    angleæ˜¯è§’åº?    magåœ°ç£/ç”µå­ç½—ç›˜
+    Zæ˜¯æ–œç€å€¾æ–œçš„è§’åº?  */
 }
 void backGroundSystem()
 {
