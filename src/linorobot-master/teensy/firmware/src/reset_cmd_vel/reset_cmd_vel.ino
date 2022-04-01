@@ -237,9 +237,9 @@ void stopBase()
 {
   vel_x = 0;
   vel_th = 0;
-  Run_Moto_F(0, 0, 1, 1);
-  Run_Moto_F(0, 0, 2, 2);
-  Run_Moto_F(0, 0, 3, 3);
+  // Run_Moto_F(0, 0, 1, 1);
+  // Run_Moto_F(0, 0, 2, 2);
+  // Run_Moto_F(0, 0, 3, 3);
 }
 
 /**

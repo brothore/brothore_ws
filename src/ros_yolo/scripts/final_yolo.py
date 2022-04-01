@@ -7,8 +7,8 @@ from std_msgs.msg import Header
 from std_msgs.msg import String
 from sensor_msgs.msg import CompressedImage
 from sensor_msgs.msg import Image
-IMAGE_WIDTH=1241
-IMAGE_HEIGHT=376
+IMAGE_WIDTH=640
+IMAGE_HEIGHT=480
 
 import sys
 # sys.path.remove('/opt/ros/kinetic/lib/python2.7/dist-packages')
@@ -26,8 +26,9 @@ import numpy as np
 from models.experimental import attempt_load
 from utils.general import (
     check_img_size, non_max_suppression, apply_classifier, scale_coords,
-    xyxy2xywh, plot_one_box, strip_optimizer, set_logging)
+    xyxy2xywh, strip_optimizer, set_logging)
 from utils.torch_utils import select_device, load_classifier, time_synchronized
+from utils.plots import plot_one_box
 
 from matplotlib import pyplot as plt
 
@@ -174,7 +175,7 @@ if __name__ == '__main__':
     device = ''
     device = select_device(device)
     half = device.type != 'cpu'  # half precision only supported on CUDA
-    weights = '/home/ubuntu/linorobot_ws/src/ros_yolo/scripts/weights/best.pt'
+    weights = '/home/ubuntu/linorobot_ws/src/ros_yolo/scripts/best.pt'
     imgsz = 640
     model = attempt_load(weights, map_location=device)  # load FP32 model
     imgsz = check_img_size(imgsz, s=model.stride.max())  # check img_size
