@@ -54,7 +54,7 @@ CMAKE_BINARY_DIR = /home/ubuntu/linorobot_ws/build
 include yolov5_pytorch_ros/CMakeFiles/_yolov5_pytorch_ros_generate_messages_check_deps_BoundingBoxes.dir/progress.make
 
 yolov5_pytorch_ros/CMakeFiles/_yolov5_pytorch_ros_generate_messages_check_deps_BoundingBoxes:
-	cd /home/ubuntu/linorobot_ws/build/yolov5_pytorch_ros && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genmsg/cmake/../../../lib/genmsg/genmsg_check_deps.py yolov5_pytorch_ros /home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBoxes.msg std_msgs/Header:yolov5_pytorch_ros/BoundingBox
+	cd /home/ubuntu/linorobot_ws/build/yolov5_pytorch_ros && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genmsg/cmake/../../../lib/genmsg/genmsg_check_deps.py yolov5_pytorch_ros /home/ubuntu/linorobot_ws/src/yolov5_pytorch_ros/msg/BoundingBoxes.msg yolov5_pytorch_ros/BoundingBox:std_msgs/Header
 
 _yolov5_pytorch_ros_generate_messages_check_deps_BoundingBoxes: yolov5_pytorch_ros/CMakeFiles/_yolov5_pytorch_ros_generate_messages_check_deps_BoundingBoxes
 _yolov5_pytorch_ros_generate_messages_check_deps_BoundingBoxes: yolov5_pytorch_ros/CMakeFiles/_yolov5_pytorch_ros_generate_messages_check_deps_BoundingBoxes.dir/build.make

@@ -11,6 +11,8 @@ add_message_files(
   Imu.msg
   wheel_speed.msg
   car_param.msg
+  running_time.msg
+  
 )
 
 generate_messages(DEPENDENCIES std_msgs geometry_msgs)

@@ -7,13 +7,14 @@ from std_msgs.msg import Header
 from std_msgs.msg import String
 from sensor_msgs.msg import CompressedImage
 from sensor_msgs.msg import Image
-IMAGE_WIDTH=640
-IMAGE_HEIGHT=480
+IMAGE_WIDTH=320
+IMAGE_HEIGHT=240
 
 import sys
 # sys.path.remove('/opt/ros/kinetic/lib/python2.7/dist-packages')
 
-
+DefaultWidth=256
+DefaultHeight=192
 
 
 import os
@@ -61,6 +62,7 @@ def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scale
     dh /= 2
 
     if shape[::-1] != new_unpad:  # resize
+        img = cv2.resize(img,(DefaultWidth,DefaultHeight))
         img = cv2.resize(img, new_unpad, interpolation=cv2.INTER_LINEAR)
     top, bottom = int(round(dh - 0.1)), int(round(dh + 0.1))
     left, right = int(round(dw - 0.1)), int(round(dw + 0.1))
@@ -142,8 +144,9 @@ def detect(img):
     print('3-2', time3 - time2)
     print('4-3', time4 - time3)
     print('total',time4-time1)
-    # out_img = im0[:, :, [2, 1, 0]]
-    out_img = im0
+    out_img = im0[:, :, :]
+    # out_img=cv2.resize(out_img,(DefaultWidth,DefaultHeight))
+    # out_img = im0
     ros_image=out_img
     cv2.imshow('YOLOV5', out_img)
     a = cv2.waitKey(1)
