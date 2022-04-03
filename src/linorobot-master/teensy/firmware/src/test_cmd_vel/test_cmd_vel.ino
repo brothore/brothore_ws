@@ -59,27 +59,29 @@ float Angle_tg, Angle_tt, Angle_fx;
 float Gyro_tg, Gyro_tt, Gyro_fx;
 //you
 const int R3S = 12;
-const int R3A = 26;
-const int R3B = 25;
-const int L3A = 23;
-const int L3B = 24;
+const int R3A = 25;
+const int R3B = 26;
+const int L3A = 24;
+const int L3B = 23;
 const int L3S = 13;
 //zuo
 
-const int L1A = 35;
-const int L1B = 36;
+
+
+const int L1A = 36;
+const int L1B = 35;
 const int L1S = 9;
 const int L2S = 6;
-const int L2A = 39;
-const int L2B = 38;
+const int L2A = 38;
+const int L2B = 39;
 
 
-const int R1A = 29;
-const int R1B = 28;
-const int R1S = 8;
-const int R2S = 7;
-const int R2A = 30;
-const int R2B = 31;
+const int R1A = 31;
+const int R1B = 30;
+const int R1S = 7;
+const int R2S = 6;
+const int R2A = 28;
+const int R2B = 29;
 
 unsigned long g_prev_command_time = 0;
 int H_L1_B = 0;
