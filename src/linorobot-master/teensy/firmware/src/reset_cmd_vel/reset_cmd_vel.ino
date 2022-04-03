@@ -80,7 +80,7 @@ const int L2B = 39;
 const int R1A = 31;
 const int R1B = 30;
 const int R1S = 7;
-const int R2S = 6;
+const int R2S = 8;
 const int R2A = 28;
 const int R2B = 29;
 
