@@ -1,8 +1,0 @@
-prefix=/home/ubuntu/linorobot_ws/devel
-
-Name: guide01_test
-Description: Description of guide01_test
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

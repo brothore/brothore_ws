@@ -1,8 +1,0 @@
-prefix=/home/ubuntu/linorobot_ws/install
-
-Name: TransportVideo
-Description: Description of TransportVideo
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

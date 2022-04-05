@@ -1,8 +1,0 @@
-prefix=/home/ubuntu/linorobot_ws/install
-
-Name: gazebo01_test
-Description: Description of gazebo01_test
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
