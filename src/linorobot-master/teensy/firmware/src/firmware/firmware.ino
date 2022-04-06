@@ -486,12 +486,19 @@ void moveBase()
     int l4 = motor4_pid.compute(req_rpm.motor4, current_rpm4);
     int l5 = motor5_pid.compute(req_rpm.motor5, current_rpm5);
     int l6 = motor6_pid.compute(req_rpm.motor6, current_rpm6);
-    str_wheel.L1_PID = (float)l1;
-    str_wheel.R1_PID = (float)l2;
-    str_wheel.L2_PID = (float)l3;
-    str_wheel.R2_PID = (float)l4;
-    str_wheel.L3_PID = (float)l5;
-    str_wheel.R3_PID = (float)l6;
+    // str_wheel.L1_PID = (float)l1;
+    // str_wheel.R1_PID = (float)l2;
+    // str_wheel.L2_PID = (float)l3;
+    // str_wheel.R2_PID = (float)l4;
+    // str_wheel.L3_PID = (float)l5;
+    // str_wheel.R3_PID = (float)l6;
+
+    str_wheel.L1_PID = (float)req_rpm.motor1;
+    str_wheel.R1_PID = (float)req_rpm.motor2;
+    str_wheel.L2_PID = (float)req_rpm.motor3;
+    str_wheel.R2_PID = (float)req_rpm.motor4;
+    str_wheel.L3_PID = (float)req_rpm.motor5;
+    str_wheel.R3_PID = (float)req_rpm.motor6;
     // current_rpm1 = motorL1;
     // str_wheel.L1=current_rpm1;
     // str_wheel.L2=current_rpm3;
