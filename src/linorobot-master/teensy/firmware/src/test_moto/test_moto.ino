@@ -1,5 +1,5 @@
 
-#define PI 3.14159265
+// #define PI 3.14159265
 #define MotorL1countA 21 //编码器A
 #define MotorL1countB 45 //编码器B
 
@@ -375,9 +375,9 @@ Read_Moto_V();
 // Run_Moto_F(100,100,1,0);
 // // Run_Moto_F(100,100,1,0);
 // delay(2000);
-Run_Moto_F(100,0,3,0);
+ Run_Moto_F(100,100,0,0);
 
-// Run_Moto_F(100,50,1,0);
+ Run_Moto_F(100,100,0,0);
 
 // delay(2000);
 }

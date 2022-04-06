@@ -42,8 +42,8 @@
 // #define K_I 0.3 // I constant
 // #define K_D 0.5 // D constant
 
-#define K_P 1.5 // P constant
-#define K_I 0.1 // I constant
+#define K_P 400.0 // P constant
+#define K_I 10.0 // I constant
 #define K_D 0.0 // D constant
 
 #define ROBOT_WIDTH 255
@@ -52,6 +52,7 @@
 #define UTESLA_TO_TESLA 0.000001
 #include <Wire.h>
 #include <JY901.h>
+void(* resetFunc) (void) = 0;
 double vel_x;
 double vel_th;
 float Acc_lr, Acc_fb, Acc_g;
@@ -79,7 +80,7 @@ const int L2B = 39;
 const int R1A = 31;
 const int R1B = 30;
 const int R1S = 7;
-const int R2S = 6;
+const int R2S = 8;
 const int R2A = 28;
 const int R2B = 29;
 
@@ -107,12 +108,12 @@ float g_req_linear_vel_x = 0;
 float g_req_linear_vel_y = 0;
 float g_req_angular_vel_z = 0;
 long lasttim;
-PID motor1_pid(PWM_MIN, PWM_MAX, 500, 10, 0);
-PID motor2_pid(PWM_MIN, PWM_MAX, 500, 10, 0);
-PID motor3_pid(PWM_MIN, PWM_MAX, 500, 10, 0);
-PID motor4_pid(PWM_MIN, PWM_MAX, 500, 10, 0);
-PID motor5_pid(PWM_MIN, PWM_MAX, 500, 10, 0);
-PID motor6_pid(PWM_MIN, PWM_MAX, 500, 10, 0);
+PID motor1_pid(PWM_MIN, PWM_MAX, K_P, K_I, K_D);
+PID motor2_pid(PWM_MIN, PWM_MAX, K_P, K_I, K_D);
+PID motor3_pid(PWM_MIN, PWM_MAX, K_P, K_I, K_D);
+PID motor4_pid(PWM_MIN, PWM_MAX, K_P, K_I, K_D);
+PID motor5_pid(PWM_MIN, PWM_MAX, K_P, K_I, K_D);
+PID motor6_pid(PWM_MIN, PWM_MAX, K_P, K_I, K_D);
 double left_vel;
 double right_vel;
 long tim;
@@ -125,9 +126,9 @@ void PIDCallback(const lino_msgs::PID &pid);
 void CarCallback(const lino_msgs::car_param &car_p);
 int vel_flag = 0;
 
-float R_wheel = 0.0745;
-float W_car = 0.22;
-float L_car = 0.28;
+float R_wheel = 0.0911;
+float W_car = 0.715;
+float L_car = 0.32;
   unsigned long nowtime = 0;
 
 
@@ -209,9 +210,9 @@ void stopBase()
 {
   vel_x = 0;
   vel_th = 0;
-  Run_Moto_F(0, 0, 1, 1);
-  Run_Moto_F(0, 0, 2, 2);
-  Run_Moto_F(0, 0, 3, 3);
+  // Run_Moto_F(0, 0, 1, 1);
+  // Run_Moto_F(0, 0, 2, 2);
+  // Run_Moto_F(0, 0, 3, 3);
 }
 
 /**
@@ -223,6 +224,7 @@ void stopBase()
     r2------r1
 
    * */
+  int looing = 0;
 void Read_Moto_V(int ifDebug)
 {
 
@@ -294,6 +296,9 @@ void Read_Moto_V(int ifDebug)
       str_wheel.R1 = v2;
       str_wheel.R2 = v4;
       str_wheel.R3 = v6;
+      str_wheel.R3_PID=looing++;
+      str_wheel.R2_PID=millis();
+
     }
     vel_flag = 0;
      motorL1 = 0;
@@ -326,7 +331,14 @@ void CarCallback(const lino_msgs::car_param &car_p){
   R_wheel = car_p.R_wheel;
   W_car = car_p.W_car;
   L_car = car_p.L_car;
-
+  int resetCar = car_p.Reset_car;
+  if (resetCar >=1)
+  {
+    resetFunc();   
+  }
+  // str_wheel.R2_PID = r2_pid;
+  // str_wheel.L3_PID = l3_pid;
+  // str_wheel.R3_PID = r3_pid;
 }
 void Read_Moto_L1()
 {
@@ -718,6 +730,9 @@ void backGroundSystem()
     JY901.CopeSerialData(Serial2.read()); //Call JY901 data cope function
   }
   wheel_speed_pub.publish(&str_wheel);
+    str_wheel.L1_PID = R_wheel;
+  str_wheel.R1_PID = W_car;
+  str_wheel.L2_PID = L_car;
 }
 
 void loop()
