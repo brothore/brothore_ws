@@ -52,7 +52,7 @@ data/*
 !data/*.sh
 
 results*.csv
-*
+
 .cb
 .git
 yolov5s.pt
