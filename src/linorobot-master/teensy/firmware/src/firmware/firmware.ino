@@ -14,6 +14,8 @@
 #include "geometry_msgs/Twist.h"
 //header file for pid server
 #include "lino_msgs/PID.h"
+#include <lino_msgs/car_param.h>
+
 //header file for imu
 #include "lino_msgs/Imu.h"
 #include <lino_msgs/wheel_speed.h>
@@ -36,7 +38,7 @@
 // Encoder motor4_encoder(MOTOR4_ENCODER_A, MOTOR4_ENCODER_B, COUNTS_PER_REV); 
 // Encoder motor5_encoder(MOTOR5_ENCODER_A, MOTOR5_ENCODER_B, COUNTS_PER_REV); 
 // Encoder motor6_encoder(MOTOR6_ENCODER_A, MOTOR6_ENCODER_B, COUNTS_PER_REV); 
-
+void(* resetFunc) (void) = 0;
 volatile int H_L1_B = 0;
 volatile int H_R1_B = 0;
 volatile int H_L2_B = 0;
@@ -96,10 +98,12 @@ unsigned long g_prev_command_time = 0;
 //callback function prototypes
 void commandCallback(const geometry_msgs::Twist& cmd_msg);
 void PIDCallback(const lino_msgs::PID& pid);
+void CarCallback(const lino_msgs::car_param &car_p);
 int vel_flag = 0;
 unsigned long nowtime = 0;
 volatile int change = 0;
 ros::NodeHandle nh;
+ros::Subscriber<lino_msgs::car_param> car_sub("car_param",CarCallback);
 
 ros::Subscriber<geometry_msgs::Twist> cmd_sub("cmd_vel", commandCallback);
 ros::Subscriber<lino_msgs::PID> pid_sub("pid", PIDCallback);
@@ -372,6 +376,7 @@ void setup()
     nh.getHardware()->setBaud(57600);
     nh.subscribe(pid_sub);
     nh.subscribe(cmd_sub);
+     nh.subscribe(car_sub);
     nh.advertise(raw_vel_pub);
     nh.advertise(raw_imu_pub);
     nh.advertise(wheel_speed_pub);
@@ -392,8 +397,8 @@ void loop()
     static unsigned long prev_imu_time = 0;
     static unsigned long prev_debug_time = 0;
     static bool imu_is_initialized;
-    str_wheel.L_SPEED = (float)g_prev_command_time;
-    str_wheel.R_SPEED =  (float)millis();
+    // str_wheel.L_SPEED = (float)g_prev_command_time;
+    // str_wheel.R_SPEED =  (float)millis();
     //this block drives the robot based on defined rate
     if ((millis() - prev_control_time) >= (1000 / COMMAND_RATE))
     {
@@ -445,12 +450,12 @@ void PIDCallback(const lino_msgs::PID& pid)
 {
     //callback function every time PID constants are received from lino_pid for tuning
     //this callback receives pid object where P,I, and D constants are stored
-    // motor1_pid.updateConstants(pid.p, pid.i, pid.d);
-    // motor2_pid.updateConstants(pid.p, pid.i, pid.d);
-    // motor3_pid.updateConstants(pid.p, pid.i, pid.d);
-    // motor4_pid.updateConstants(pid.p, pid.i, pid.d);
-    // motor5_pid.updateConstants(pid.p, pid.i, pid.d);
-    // motor6_pid.updateConstants(pid.p, pid.i, pid.d);
+    motor1_pid.updateConstants(pid.p, pid.i, pid.d);
+    motor2_pid.updateConstants(pid.p, pid.i, pid.d);
+    motor3_pid.updateConstants(pid.p, pid.i, pid.d);
+    motor4_pid.updateConstants(pid.p, pid.i, pid.d);
+    motor5_pid.updateConstants(pid.p, pid.i, pid.d);
+    motor6_pid.updateConstants(pid.p, pid.i, pid.d);
 
 
 }
@@ -475,13 +480,18 @@ void moveBase()
     // int current_rpm2 = motor2_encoder.getRPM();
     // int current_rpm3 = motor3_encoder.getRPM();
     // int current_rpm4 = motor4_encoder.getRPM();
-
-    str_wheel.L1_PID = (float)motor1_pid.compute(req_rpm.motor1, current_rpm1);
-    str_wheel.R1_PID = (float)req_rpm.motor2;
-    str_wheel.L2_PID = (float)req_rpm.motor3;
-    str_wheel.R2_PID = (float)req_rpm.motor4;
-    str_wheel.L3_PID = (float)req_rpm.motor5;
-    str_wheel.R3_PID = (float)req_rpm.motor6;
+    int l1 = motor1_pid.compute(req_rpm.motor1, current_rpm1);
+    int l2 = motor2_pid.compute(req_rpm.motor2, current_rpm2);
+    int l3 = motor3_pid.compute(req_rpm.motor3, current_rpm3);
+    int l4 = motor4_pid.compute(req_rpm.motor4, current_rpm4);
+    int l5 = motor5_pid.compute(req_rpm.motor5, current_rpm5);
+    int l6 = motor6_pid.compute(req_rpm.motor6, current_rpm6);
+    str_wheel.L1_PID = (float)l1;
+    str_wheel.R1_PID = (float)l2;
+    str_wheel.L2_PID = (float)l3;
+    str_wheel.R2_PID = (float)l4;
+    str_wheel.L3_PID = (float)l5;
+    str_wheel.R3_PID = (float)l6;
     // current_rpm1 = motorL1;
     // str_wheel.L1=current_rpm1;
     // str_wheel.L2=current_rpm3;
@@ -494,12 +504,12 @@ void moveBase()
 
     //the required rpm is capped at -/+ MAX_RPM to prevent the PID from having too much error
     //the PWM value sent to the motor driver is the calculated PID based on required RPM vs measured RPM
-    // motor1_controller.spin(motor1_pid.compute(req_rpm.motor1, current_rpm1));
-    // motor2_controller.spin(motor2_pid.compute(req_rpm.motor2, current_rpm2));
-    // motor3_controller.spin(motor3_pid.compute(req_rpm.motor3, current_rpm3));  
-    // motor4_controller.spin(motor4_pid.compute(req_rpm.motor4, current_rpm4));    
-    // motor5_controller.spin(motor5_pid.compute(req_rpm.motor5, current_rpm5));  
-    // motor6_controller.spin(motor6_pid.compute(req_rpm.motor6, current_rpm6));  
+    motor1_controller.spin(l1);
+    motor2_controller.spin(l2);
+    motor3_controller.spin(l3);  
+    motor4_controller.spin(l4);    
+    motor5_controller.spin(l5);  
+    motor6_controller.spin(l6);  
 
 
     //    motor1_controller.spin(50);
@@ -601,4 +611,11 @@ void printDebug()
     // nh.loginfo(buffer);
     // sprintf (buffer, "Encoder RearRight  : %ld\n", motor6_encoder.read());
     // nh.loginfo(buffer);
+}
+void CarCallback(const lino_msgs::car_param &car_p){
+    int resetCar = car_p.Reset_car;
+  if (resetCar >=1)
+  {  
+      resetFunc();
+  }
 }
