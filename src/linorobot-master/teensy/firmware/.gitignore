@@ -1,0 +1,6 @@
+.pioenvs
+build/
+.vscode/*
+!.vscode/arduino.json
+.secret
+info/authtoken.secret

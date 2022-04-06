@@ -1,0 +1,2 @@
+gazebo01_test:guide01_test:imu_calib-master:lino_msgs-master:lino_udev-master:linorobot-master:my_detector:opencv_test:razor_imu_9dof-indigo-devel:ros_yolo:web_video_server:ydlidar_ros_driver:yolov5_pytorch_ros
+-DCMAKE_BUILD_TYPE=RelWithDebInfo -DCATKIN_DEVEL_PREFIX=/home/ubuntu/linorobot_ws/devel -DCMAKE_INSTALL_PREFIX=/home/ubuntu/linorobot_ws/install -G Unix Makefiles

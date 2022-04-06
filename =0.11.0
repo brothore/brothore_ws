@@ -1,0 +1,16 @@
+Defaulting to user installation because normal site-packages is not writeable
+Looking in indexes: https://mirrors.aliyun.com/pypi/simple/
+Requirement already satisfied: seaborn in /usr/local/lib/python3.8/dist-packages (0.11.2)
+Requirement already satisfied: numpy>=1.15 in /usr/local/lib/python3.8/dist-packages (from seaborn) (1.22.3)
+Requirement already satisfied: pandas>=0.23 in /usr/local/lib/python3.8/dist-packages (from seaborn) (1.4.1)
+Requirement already satisfied: scipy>=1.0 in /usr/local/lib/python3.8/dist-packages (from seaborn) (1.8.0)
+Requirement already satisfied: matplotlib>=2.2 in /usr/local/lib/python3.8/dist-packages (from seaborn) (3.5.1)
+Requirement already satisfied: packaging>=20.0 in /usr/local/lib/python3.8/dist-packages (from matplotlib>=2.2->seaborn) (21.3)
+Requirement already satisfied: kiwisolver>=1.0.1 in /usr/lib/python3/dist-packages (from matplotlib>=2.2->seaborn) (1.0.1)
+Requirement already satisfied: fonttools>=4.22.0 in /usr/local/lib/python3.8/dist-packages (from matplotlib>=2.2->seaborn) (4.31.2)
+Requirement already satisfied: cycler>=0.10 in /usr/lib/python3/dist-packages (from matplotlib>=2.2->seaborn) (0.10.0)
+Requirement already satisfied: python-dateutil>=2.7 in /home/ubuntu/.local/lib/python3.8/site-packages (from matplotlib>=2.2->seaborn) (2.8.2)
+Requirement already satisfied: pyparsing>=2.2.1 in /usr/lib/python3/dist-packages (from matplotlib>=2.2->seaborn) (2.4.6)
+Requirement already satisfied: pillow>=6.2.0 in /usr/local/lib/python3.8/dist-packages (from matplotlib>=2.2->seaborn) (9.0.1)
+Requirement already satisfied: pytz>=2020.1 in /usr/local/lib/python3.8/dist-packages (from pandas>=0.23->seaborn) (2022.1)
+Requirement already satisfied: six>=1.5 in /usr/lib/python3/dist-packages (from python-dateutil>=2.7->matplotlib>=2.2->seaborn) (1.14.0)

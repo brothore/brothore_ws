@@ -1,0 +1,2 @@
+set(lino_msgs_MESSAGE_FILES "msg/Velocities.msg;msg/PID.msg;msg/Imu.msg;msg/wheel_speed.msg;msg/car_param.msg;msg/running_time.msg")
+set(lino_msgs_SERVICE_FILES "")

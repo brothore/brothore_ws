@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="opencv_test" name="camera_publish" type="opencv_test_node"></node>
+</launch>
