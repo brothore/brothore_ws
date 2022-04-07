@@ -1,0 +1,14 @@
+float32 L1
+float32 L2
+float32 L3
+float32 R1
+float32 R2
+float32 R3
+float32 L_SPEED
+float32 R_SPEED
+float32 L1_PID
+float32 L2_PID
+float32 L3_PID
+float32 R1_PID
+float32 R2_PID
+float32 R3_PID

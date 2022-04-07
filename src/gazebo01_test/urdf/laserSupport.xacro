@@ -1,0 +1,76 @@
+<robot name="my_laser" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:property name="laser_support_circle" value="0.015" />
+<xacro:property name="laser_support_height" value="0.10" />
+<xacro:property name="laser_circle" value="0.030" />
+<xacro:property name="laser_height" value="0.030" />
+<xacro:property name="laser_m" value="0.01" /> <!-- 质量  -->
+<xacro:property name="laser_support_m" value="0.01" /> <!-- 质量  -->
+<!-- 摄像头支架宏实现 -->
+<xacro:macro name="laser_support" params="name">
+  <link name="${name}_laser_support">
+    <visual>
+      <geometry>
+        <cylinder radius="${laser_support_circle}" length="${laser_support_height}" />
+      </geometry>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <material name="black" />
+    </visual>
+    <collision>
+        <geometry>
+          <cylinder radius="${laser_support_circle}" length="${laser_support_height}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+      </collision>
+      <xacro:cylinder_inertial_matrix m="${laser_support_m}" r="${laser_support_circle}" h="${laser_support_height}" />
+  </link>
+  <gazebo reference="laser_support">
+    <material>Gazebo/Blue</material>
+    </gazebo>
+  <joint name="${name}_support2base_link" type="fixed">
+    <parent link="base_link" />
+    <child link="${name}_laser_support" />
+    <origin xyz=" ${0.1 * base_link_radius} 0 ${(base_link_length / 2 + laser_support_height / 2) }" />
+    <axis xyz="0 0 1" />
+  </joint>
+
+ 
+
+</xacro:macro>
+
+<xacro:macro name="laser" params="name">
+  
+  <link name="${name}_laser">
+    <visual>
+      <geometry>
+        <cylinder radius="${laser_circle}" length="${laser_height}" />
+      </geometry>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <material name="black" />
+    </visual>
+    <collision>
+        <geometry>
+          <cylinder radius="${laser_circle}" length="${laser_height}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+      </collision>
+      <xacro:cylinder_inertial_matrix m="${laser_m}" r="${laser_circle}" h="${laser_height}" />
+  </link>
+
+  <joint name="${name}_laser2support" type="fixed">
+    <parent link="${name}_laser_support" />
+    <child link="${name}_laser" />
+    <origin xyz=" 0 0 ${(laser_support_height / 2 + laser_height / 2) }" />
+    <axis xyz="0 0 1" />
+  </joint>
+  <gazebo reference="laser">
+    <material>Gazebo/Black</material>
+    </gazebo>
+</xacro:macro>
+
+
+
+
+<xacro:property name="laser_name" value="S1" />
+<xacro:laser_support name="${laser_name}"/>
+<xacro:laser name="${laser_name}"/>
+</robot>

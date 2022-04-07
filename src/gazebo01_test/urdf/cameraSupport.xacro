@@ -1,0 +1,46 @@
+<robot name="my_camera" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:property name="camera_radius" value="0.03" /> <!-- camera 半径 -->
+  <xacro:property name="camera_width" value="0.02" /> <!-- camera 宽 -->
+  <xacro:property name="camera_length" value="0.02" /> 
+<xacro:property name="camera_m" value="0.01" /> <!-- 质量  -->
+<xacro:property name="camera_support_m" value="0.01" /> <!-- 质量  -->
+
+ 
+
+<xacro:macro name="camera" params="name">
+  
+  <link name="${name}_camera">
+    <visual>
+      <geometry>
+        <box size="${camera_width} ${camera_radius} ${camera_length}"/>
+      </geometry>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <material name="black" />
+    </visual>
+    <collision>
+      <geometry>
+        <box size="${camera_width} ${camera_radius} ${camera_length}"/>
+      </geometry>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+  </collision>
+  <xacro:Box_inertial_matrix m="${camera_m}" l="${camera_radius}"  w="${camera_width}" h="${camera_length}" />
+  
+  </link>
+
+  <joint name="${name}_camera2base_link" type="fixed">
+    <parent link="base_link" />
+    <child link="${name}_camera" />
+    <origin xyz=" ${0.5 * base_link_radius} 0 ${(base_link_length / 2 + camera_length/ 2) }" />
+    <axis xyz="0 0 1" />
+  </joint>
+  <gazebo reference="camera">
+    <material>Gazebo/Black</material>
+    </gazebo>
+</xacro:macro>
+
+
+
+
+<xacro:property name="camera_name" value="C1" />
+<xacro:camera name="${camera_name}"/>
+</robot>
