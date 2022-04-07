@@ -1,4 +1,0 @@
-# *表示忽略所有文件
-*
-# !表示.gitignore不被忽略
-!.gitignore

@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC -O2 -g -DNDEBUG  -shared -Wl,-soname,liblino_base.so -o /home/ubuntu/linorobot_ws/devel/lib/liblino_base.so CMakeFiles/lino_base.dir/src/lino_base.cpp.o 

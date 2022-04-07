@@ -1,8 +1,0 @@
-prefix=/home/ubuntu/linorobot_ws/devel
-
-Name: yolov5_pytorch_ros
-Description: Description of yolov5_pytorch_ros
-Version: 0.1.0
-Cflags: -I/home/ubuntu/linorobot_ws/devel/include
-Libs: -L${prefix}/lib 
-Requires: lino_msgs
