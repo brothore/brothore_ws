@@ -88,6 +88,7 @@ float g_req_linear_vel_y = 0;
 float g_req_angular_vel_z = 0;
 
 unsigned long g_prev_command_time = 0;
+unsigned long out_time = 0;
 
     int current_rpm1;
     int current_rpm2;
@@ -371,7 +372,7 @@ void setup()
 {
     // steering_servo.attach(STEERING_PIN);
     // steering_servo.write(90); 
-    
+ 
     nh.initNode();
     nh.getHardware()->setBaud(57600);
     nh.subscribe(pid_sub);
@@ -391,7 +392,9 @@ void setup()
 void loop()
 {
     Read_Moto_V();
-
+     str_wheel.R1_PID = kinematics.wheels_x_distance_;
+    str_wheel.R2_PID = kinematics.wheels_y_distance_;
+    str_wheel.R3_PID = kinematics.wheel_circumference_;
     wheel_speed_pub.publish(&str_wheel);
     static unsigned long prev_control_time = 0;
     static unsigned long prev_imu_time = 0;
@@ -405,7 +408,7 @@ void loop()
         moveBase();
         prev_control_time = millis();
     }
-    if ((millis() - g_prev_command_time) >= 400)
+    if ((millis() - g_prev_command_time) >= out_time)
     {
         stopBase();
     }
@@ -494,11 +497,11 @@ void moveBase()
     // str_wheel.R3_PID = (float)l6;
 
     str_wheel.L1_PID = (float)req_rpm.motor1;
-    str_wheel.R1_PID = (float)req_rpm.motor2;
     str_wheel.L2_PID = (float)req_rpm.motor3;
-    str_wheel.R2_PID = (float)req_rpm.motor4;
     str_wheel.L3_PID = (float)req_rpm.motor5;
-    str_wheel.R3_PID = (float)req_rpm.motor6;
+    // str_wheel.R2_PID = (float)req_rpm.motor4;
+    // str_wheel.L3_PID = (float)req_rpm.motor5;
+    // str_wheel.R3_PID = (float)req_rpm.motor6;
     // current_rpm1 = motorL1;
     // str_wheel.L1=current_rpm1;
     // str_wheel.L2=current_rpm3;
@@ -625,4 +628,9 @@ void CarCallback(const lino_msgs::car_param &car_p){
   {  
       resetFunc();
   }
+  kinematics.wheels_x_distance_= car_p.W_car;
+  kinematics.wheels_y_distance_= car_p.L_car;
+  kinematics.wheel_circumference_ = car_p.R_wheel*PI;
+  out_time = car_p.out_time;
+
 }

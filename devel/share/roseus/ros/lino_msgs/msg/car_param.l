@@ -14,7 +14,7 @@
 
 (defclass lino_msgs::car_param
   :super ros::object
-  :slots (_R_wheel _W_car _L_car _Reset_car ))
+  :slots (_R_wheel _W_car _L_car _Reset_car _out_time ))
 
 (defmethod lino_msgs::car_param
   (:init
@@ -23,12 +23,14 @@
     ((:W_car __W_car) 0.0)
     ((:L_car __L_car) 0.0)
     ((:Reset_car __Reset_car) 0.0)
+    ((:out_time __out_time) 0)
     )
    (send-super :init)
    (setq _R_wheel (float __R_wheel))
    (setq _W_car (float __W_car))
    (setq _L_car (float __L_car))
    (setq _Reset_car (float __Reset_car))
+   (setq _out_time (round __out_time))
    self)
   (:R_wheel
    (&optional __R_wheel)
@@ -42,6 +44,9 @@
   (:Reset_car
    (&optional __Reset_car)
    (if __Reset_car (setq _Reset_car __Reset_car)) _Reset_car)
+  (:out_time
+   (&optional __out_time)
+   (if __out_time (setq _out_time __out_time)) _out_time)
   (:serialization-length
    ()
    (+
@@ -52,6 +57,8 @@
     ;; float32 _L_car
     4
     ;; float32 _Reset_car
+    4
+    ;; int32 _out_time
     4
     ))
   (:serialize
@@ -66,6 +73,8 @@
        (sys::poke _L_car (send s :buffer) (send s :count) :float) (incf (stream-count s) 4)
      ;; float32 _Reset_car
        (sys::poke _Reset_car (send s :buffer) (send s :count) :float) (incf (stream-count s) 4)
+     ;; int32 _out_time
+       (write-long _out_time s)
      ;;
      (if (null strm) (get-output-stream-string s))))
   (:deserialize
@@ -78,22 +87,25 @@
      (setq _L_car (sys::peek buf ptr- :float)) (incf ptr- 4)
    ;; float32 _Reset_car
      (setq _Reset_car (sys::peek buf ptr- :float)) (incf ptr- 4)
+   ;; int32 _out_time
+     (setq _out_time (sys::peek buf ptr- :integer)) (incf ptr- 4)
    ;;
    self)
   )
 
-(setf (get lino_msgs::car_param :md5sum-) "71265fe5412a6ab64209f231f18d49fc")
+(setf (get lino_msgs::car_param :md5sum-) "3ea72a41c2a9f150b8f2e47b164a570d")
 (setf (get lino_msgs::car_param :datatype-) "lino_msgs/car_param")
 (setf (get lino_msgs::car_param :definition-)
       "float32 R_wheel
 float32 W_car
 float32 L_car
 float32 Reset_car
+int32 out_time
 
 ")
 
 
 
-(provide :lino_msgs/car_param "71265fe5412a6ab64209f231f18d49fc")
+(provide :lino_msgs/car_param "3ea72a41c2a9f150b8f2e47b164a570d")
 
 

@@ -8,16 +8,17 @@ import struct
 
 
 class car_param(genpy.Message):
-  _md5sum = "71265fe5412a6ab64209f231f18d49fc"
+  _md5sum = "3ea72a41c2a9f150b8f2e47b164a570d"
   _type = "lino_msgs/car_param"
   _has_header = False  # flag to mark the presence of a Header object
   _full_text = """float32 R_wheel
 float32 W_car
 float32 L_car
 float32 Reset_car
+int32 out_time
 """
-  __slots__ = ['R_wheel','W_car','L_car','Reset_car']
-  _slot_types = ['float32','float32','float32','float32']
+  __slots__ = ['R_wheel','W_car','L_car','Reset_car','out_time']
+  _slot_types = ['float32','float32','float32','float32','int32']
 
   def __init__(self, *args, **kwds):
     """
@@ -27,7 +28,7 @@ float32 Reset_car
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       R_wheel,W_car,L_car,Reset_car
+       R_wheel,W_car,L_car,Reset_car,out_time
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -44,11 +45,14 @@ float32 Reset_car
         self.L_car = 0.
       if self.Reset_car is None:
         self.Reset_car = 0.
+      if self.out_time is None:
+        self.out_time = 0
     else:
       self.R_wheel = 0.
       self.W_car = 0.
       self.L_car = 0.
       self.Reset_car = 0.
+      self.out_time = 0
 
   def _get_types(self):
     """
@@ -63,7 +67,7 @@ float32 Reset_car
     """
     try:
       _x = self
-      buff.write(_get_struct_4f().pack(_x.R_wheel, _x.W_car, _x.L_car, _x.Reset_car))
+      buff.write(_get_struct_4fi().pack(_x.R_wheel, _x.W_car, _x.L_car, _x.Reset_car, _x.out_time))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -78,8 +82,8 @@ float32 Reset_car
       end = 0
       _x = self
       start = end
-      end += 16
-      (_x.R_wheel, _x.W_car, _x.L_car, _x.Reset_car,) = _get_struct_4f().unpack(str[start:end])
+      end += 20
+      (_x.R_wheel, _x.W_car, _x.L_car, _x.Reset_car, _x.out_time,) = _get_struct_4fi().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -93,7 +97,7 @@ float32 Reset_car
     """
     try:
       _x = self
-      buff.write(_get_struct_4f().pack(_x.R_wheel, _x.W_car, _x.L_car, _x.Reset_car))
+      buff.write(_get_struct_4fi().pack(_x.R_wheel, _x.W_car, _x.L_car, _x.Reset_car, _x.out_time))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -109,8 +113,8 @@ float32 Reset_car
       end = 0
       _x = self
       start = end
-      end += 16
-      (_x.R_wheel, _x.W_car, _x.L_car, _x.Reset_car,) = _get_struct_4f().unpack(str[start:end])
+      end += 20
+      (_x.R_wheel, _x.W_car, _x.L_car, _x.Reset_car, _x.out_time,) = _get_struct_4fi().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -119,9 +123,9 @@ _struct_I = genpy.struct_I
 def _get_struct_I():
     global _struct_I
     return _struct_I
-_struct_4f = None
-def _get_struct_4f():
-    global _struct_4f
-    if _struct_4f is None:
-        _struct_4f = struct.Struct("<4f")
-    return _struct_4f
+_struct_4fi = None
+def _get_struct_4fi():
+    global _struct_4fi
+    if _struct_4fi is None:
+        _struct_4fi = struct.Struct("<4fi")
+    return _struct_4fi

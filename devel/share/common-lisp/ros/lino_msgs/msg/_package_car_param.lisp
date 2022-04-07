@@ -7,4 +7,6 @@
           L_CAR
           RESET_CAR-VAL
           RESET_CAR
+          OUT_TIME-VAL
+          OUT_TIME
 ))
