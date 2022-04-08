@@ -373,7 +373,7 @@ void setup()
 {
     // steering_servo.attach(STEERING_PIN);
     // steering_servo.write(90); 
-    JY901.attach(Serial1);
+    JY901.attach(Serial2);
     nh.initNode();
     nh.getHardware()->setBaud(57600);
     nh.subscribe(pid_sub);
@@ -387,7 +387,7 @@ void setup()
         nh.spinOnce();
     }
       // Serial.begin(9600);
-  Serial1.begin(9600);
+  Serial2.begin(9600);
     nh.loginfo("LINOBASE CONNECTED");
     delay(1);
 }
