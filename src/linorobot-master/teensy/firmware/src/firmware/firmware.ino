@@ -421,7 +421,7 @@ void loop()
         //sanity check if the IMU is connected
         if (!imu_is_initialized)
         {
-            // imu_is_initialized = initIMU();
+            imu_is_initialized = initIMU();
 
             imu_is_initialized = true;
             if(imu_is_initialized)
