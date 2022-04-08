@@ -5,7 +5,7 @@
 #endif
 
 // #include <Servo.h>
-
+#include "JY901_Serial.h"
 #include "ros.h"
 #include "ros/time.h"
 //header file for publishing velocities for odom
@@ -31,6 +31,7 @@
 #define IMU_PUBLISH_RATE 20 //hz
 #define COMMAND_RATE 20 //hz
 #define DEBUG_RATE 5
+#define BACKGROUND_RATE 1000
 
 // Encoder motor1_encoder(MOTOR1_ENCODER_A, MOTOR1_ENCODER_B, COUNTS_PER_REV);
 // Encoder motor2_encoder(MOTOR2_ENCODER_A, MOTOR2_ENCODER_B, COUNTS_PER_REV); 
@@ -149,12 +150,12 @@ void Read_Moto_V()
     current_rpm4 = ((float)motorR2/COUNTS_PER_REV*dtm);
     current_rpm5 = ((float)motorL3/COUNTS_PER_REV*dtm);
     current_rpm6 = ((float)motorR3/COUNTS_PER_REV*dtm);
-    str_wheel.L1=current_rpm1;
-    str_wheel.L2=current_rpm3;
-    str_wheel.R1=current_rpm2;
-    str_wheel.R2=current_rpm4;
-    str_wheel.L3=current_rpm5;
-    str_wheel.R3=current_rpm6;
+    // str_wheel.L1=current_rpm1;
+    // str_wheel.L2=current_rpm3;
+    // str_wheel.R1=current_rpm2;
+    // str_wheel.R2=current_rpm4;
+    // str_wheel.L3=current_rpm5;
+    // str_wheel.R3=current_rpm6;
     vel_flag = 0;
      motorL1 = 0;
      motorR1 = 0;
@@ -372,7 +373,7 @@ void setup()
 {
     // steering_servo.attach(STEERING_PIN);
     // steering_servo.write(90); 
- 
+    JY901.attach(Serial1);
     nh.initNode();
     nh.getHardware()->setBaud(57600);
     nh.subscribe(pid_sub);
@@ -385,23 +386,37 @@ void setup()
     {
         nh.spinOnce();
     }
+      // Serial.begin(9600);
+  Serial1.begin(9600);
     nh.loginfo("LINOBASE CONNECTED");
     delay(1);
 }
-
-void loop()
-{
+void backgroundSystem(){
     Read_Moto_V();
-     str_wheel.R1_PID = kinematics.wheels_x_distance_;
-    str_wheel.R2_PID = kinematics.wheels_y_distance_;
-    str_wheel.R3_PID = kinematics.wheel_circumference_;
-    wheel_speed_pub.publish(&str_wheel);
+    //  str_wheel.R1_PID = kinematics.wheels_x_distance_;
+    // str_wheel.R2_PID = kinematics.wheels_y_distance_;
+    // str_wheel.R3_PID = kinematics.wheel_circumference_;
+    
+
+    receiveIMUdata();
+    // str_wheel.L_SPEED = (float)g_prev_command_time;
+    // str_wheel.R_SPEED =  (float)millis();
+
+  
+}
+void loop()
+{       
     static unsigned long prev_control_time = 0;
     static unsigned long prev_imu_time = 0;
     static unsigned long prev_debug_time = 0;
+    static unsigned long prev_background_time = 0;
     static bool imu_is_initialized;
-    // str_wheel.L_SPEED = (float)g_prev_command_time;
-    // str_wheel.R_SPEED =  (float)millis();
+  if ((millis() - prev_background_time) >= (1000 / BACKGROUND_RATE))
+        {
+            backgroundSystem();
+            prev_background_time = millis();
+        }
+
     //this block drives the robot based on defined rate
     if ((millis() - prev_control_time) >= (1000 / COMMAND_RATE))
     {
@@ -445,6 +460,9 @@ void loop()
             prev_debug_time = millis();
         }
     }
+
+        
+
     //call all the callbacks waiting to be called
     nh.spinOnce();
 }
@@ -496,9 +514,9 @@ void moveBase()
     // str_wheel.L3_PID = (float)l5;
     // str_wheel.R3_PID = (float)l6;
 
-    str_wheel.L1_PID = (float)req_rpm.motor1;
-    str_wheel.L2_PID = (float)req_rpm.motor3;
-    str_wheel.L3_PID = (float)req_rpm.motor5;
+    // str_wheel.L1_PID = (float)req_rpm.motor1;
+    // str_wheel.L2_PID = (float)req_rpm.motor3;
+    // str_wheel.L3_PID = (float)req_rpm.motor5;
     // str_wheel.R2_PID = (float)req_rpm.motor4;
     // str_wheel.L3_PID = (float)req_rpm.motor5;
     // str_wheel.R3_PID = (float)req_rpm.motor6;
@@ -565,14 +583,17 @@ void stopBase()
 
 void publishIMU()
 {
+  char buffer[100];
     //pass accelerometer data to imu object
-    // raw_imu_msg.linear_acceleration = readAccelerometer();
-
+    
+    raw_imu_msg.linear_acceleration = readAccelerometer();
+    // sprintf (buffer,  "show imu:%f", JY901.getAccRawX());
+    // nh.loginfo(buffer);
     // //pass gyroscope data to imu object
-    // raw_imu_msg.angular_velocity = readGyroscope();
+    raw_imu_msg.angular_velocity = readGyroscope();
 
     // //pass accelerometer data to imu object
-    // raw_imu_msg.magnetic_field = readMagnetometer();
+    raw_imu_msg.magnetic_field = readMagnetometer();
 
     //publish raw_imu_msg
     raw_imu_pub.publish(&raw_imu_msg);
@@ -598,6 +619,7 @@ int mapFloat(int x, int in_min, int in_max, int out_min, int out_max)
 
 void printDebug()
 {
+  wheel_speed_pub.publish(&str_wheel);
     // char buffer[100];
 
     // sprintf (buffer, "Encoder FrontLeft  : %d\tEncoder FrontRight : %d\nEncoder RearLeft   : %d\tEncoder RearRight  : %d", motorL1, motorR1, motorL2, motorR2);
